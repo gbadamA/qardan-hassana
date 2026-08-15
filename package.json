@@ -1,0 +1,30 @@
+{
+  "name": "qardan-hassana",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Plateforme ONG Qardan Hassana — site vitrine (Next.js) + dashboard back-office + app mobile",
+  "packageManager": "pnpm@10.33.0",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "site": "pnpm --filter site dev",
+    "site:build": "pnpm --filter site build",
+    "typecheck": "pnpm --filter site exec tsc --noEmit && pnpm --filter dashboard exec tsc --noEmit",
+    "dashboard": "pnpm --filter dashboard dev",
+    "dashboard:build": "pnpm --filter dashboard build",
+    "db:types": "npx supabase@latest gen types typescript --local > packages/supabase/src/database.types.ts",
+    "db:reset": "npx supabase@latest db reset"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.3"
+  },
+  "pnpm": {
+    "overrides": {
+      "@types/react": "19.1.10",
+      "@types/react-dom": "19.1.7",
+      "react": "19.1.0",
+      "react-dom": "19.1.0"
+    }
+  }
+}

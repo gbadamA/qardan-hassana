@@ -1,0 +1,39 @@
+{
+  "expo": {
+    "name": "Qardan Hassana",
+    "slug": "qardan-hassana",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "scheme": "qardan",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "splash": {
+      "backgroundColor": "#0F5C2E",
+      "resizeMode": "contain"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "ci.qardanhassana.app"
+    },
+    "android": {
+      "package": "ci.qardanhassana.app",
+      "adaptiveIcon": {
+        "backgroundColor": "#0F5C2E"
+      },
+      "edgeToEdgeEnabled": true
+    },
+    "plugins": [
+      "expo-router"
+    ],
+    "experiments": {
+      "typedRoutes": false
+    },
+    "extra": {
+      "supabaseUrl": "http://10.0.2.2:54141",
+      "supabaseAnonKey": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0"
+    }
+  }
+}

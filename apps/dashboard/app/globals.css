@@ -1,0 +1,106 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light dark;
+  --c-primary: 15 92 46;
+  --c-leaf: 46 155 79;
+  --c-accent: 224 163 62;
+}
+
+/* Polices par langue — même mécanique que le site : le preset Tailwind lit
+   `var(--font-display)` / `var(--font-body)`, on branche la bonne famille ici.
+   Inter et Plus Jakarta Sans n'ont aucun glyphe arabe. */
+.locale-fr {
+  --font-display: var(--font-display-latin);
+  --font-body: var(--font-body-latin);
+}
+
+.locale-ar {
+  --font-display: var(--font-display-arabic);
+  --font-body: var(--font-body-arabic);
+}
+
+body {
+  font-family: var(--font-body), Inter, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* L'interlettrage négatif et l'italique sont pensés pour le latin ; en arabe ils
+   déforment le glyphe au lieu de le styliser. */
+[dir="rtl"] h1,
+[dir="rtl"] h2,
+[dir="rtl"] h3,
+[dir="rtl"] .font-display {
+  letter-spacing: normal;
+  line-height: 1.35;
+}
+
+[dir="rtl"] em,
+[dir="rtl"] i,
+[dir="rtl"] .italic {
+  font-style: normal;
+}
+
+/* Montants, références et numéros : toujours lus de gauche à droite, même en RTL.
+   Sans ça, « DON-2026-0001 » et « 25 000 » s'affichent à l'envers. */
+.ltr-nums {
+  direction: ltr;
+  unicode-bidi: isolate;
+  display: inline-block;
+}
+
+:focus-visible {
+  outline: 2px solid rgb(var(--c-leaf));
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-[0.9rem] font-semibold transition-all duration-200 disabled:cursor-not-allowed disabled:opacity-55;
+  }
+  .btn-primary {
+    @apply btn bg-primary text-white hover:bg-primary-hover;
+  }
+  .btn-accent {
+    @apply btn bg-accent text-ink hover:bg-accent-hover;
+  }
+  .btn-ghost {
+    @apply btn border border-light-border bg-light-surface text-light-text hover:border-leaf hover:text-primary dark:border-dark-border dark:bg-dark-surface dark:text-dark-text dark:hover:text-leaf;
+  }
+  .btn-danger {
+    @apply btn border border-danger/40 bg-danger/10 text-danger hover:bg-danger/20;
+  }
+  .btn-sm {
+    @apply px-3.5 py-1.5 text-caption;
+  }
+
+  .card {
+    @apply rounded-lg border border-light-border bg-light-surface shadow-card dark:border-dark-border dark:bg-dark-surface;
+  }
+
+  .field-label {
+    @apply mb-1.5 block text-caption font-semibold text-light-text dark:text-dark-text;
+  }
+
+  .field-input {
+    @apply w-full rounded-md border border-light-border bg-transparent px-3.5 py-2.5 text-[0.92rem] text-light-text outline-none transition-colors placeholder:text-light-muted/60 focus:border-leaf dark:border-dark-border dark:text-dark-text;
+  }
+
+  /* Tableaux : denses, lisibles, alignés sur le sens de lecture. */
+  .table-head {
+    @apply border-b border-light-border px-4 py-3 text-start text-caption font-bold uppercase tracking-wider text-light-muted dark:border-dark-border dark:text-dark-muted;
+  }
+
+  .table-cell {
+    @apply border-b border-light-border px-4 py-3 text-[0.9rem] text-light-text dark:border-dark-border dark:text-dark-text;
+  }
+}
+
+@media print {
+  .print\:hidden {
+    display: none !important;
+  }
+}

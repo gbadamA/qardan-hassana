@@ -1,0 +1,22 @@
+node_modules/
+.next/
+out/
+dist/
+.env
+.env.local
+.data/
+*.tsbuildinfo
+.DS_Store
+
+# ⚠️ Le CLI Supabase écrit ici les secrets de la pile locale — dont la clé
+# `service_role`, qui contourne toutes les politiques RLS. En clair, et régénérés
+# à chaque `supabase start` : ils n'ont rien à faire dans un dépôt.
+supabase/.temp/
+supabase/.branches/
+
+# Journaux d'installation et de build, régénérables et bruyants dans les diffs.
+*.log
+
+# Caches Expo / outils
+.expo/
+.turbo/
