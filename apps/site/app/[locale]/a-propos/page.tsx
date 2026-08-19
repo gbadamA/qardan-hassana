@@ -26,49 +26,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   });
 }
 
-/**
- * ⚠️ TEMPORAIRE — enveloppe de diagnostic.
- *
- * Next masque le message des erreurs de rendu en production. Les expressions JSX en ligne
- * sont évaluées PENDANT l'exécution de la fonction de page : un `try` autour du `return`
- * les couvre donc, contrairement aux composants enfants, rendus plus tard par React.
- *
- * Le repli renvoie une page minimale au lieu de relancer l'erreur : le build continue, et
- * l'on apprend du même coup si les 44 autres pages passent — donc si la cause est locale à
- * cette page ou partagée par la mise en page.
- */
-export default async function AboutPage(props: { params: Promise<{ locale: string }> }) {
-  try {
-    return await AboutPageInner(props);
-  } catch (error) {
-    const e = error as Error;
-    console.error("\n══════ ERREUR /a-propos (diagnostic) ══════");
-    console.error("message :", e?.message);
-    console.error("pile    :\n" + e?.stack);
-    console.error("═══════════════════════════════════════════\n");
-    return <div>diagnostic</div>;
-  }
-}
-
-async function AboutPageInner({ params }: { params: Promise<{ locale: string }> }) {
-  // ⚠️ TEMPORAIRE — sonde : un composant qui vaudrait `undefined` (export absent, résolution
-  // de module différente sous Linux) lèverait « Element type is invalid » au rendu, hors de
-  // portée du `try` ci-dessus. On vérifie donc leur existence ici, où elle est observable.
-  console.error(
-    "SONDE composants :",
-    JSON.stringify({
-      ScrollText: typeof ScrollText,
-      Building2: typeof Building2,
-      Phone: typeof Phone,
-      PageHero: typeof PageHero,
-      SectionHeading: typeof SectionHeading,
-      Icon: typeof Icon,
-      Link: typeof Link,
-      CONTACTS: Array.isArray(CONTACTS) ? CONTACTS.length : typeof CONTACTS,
-      PROGRAMS: Array.isArray(PROGRAMS) ? PROGRAMS.length : typeof PROGRAMS,
-    }),
-  );
-
+export default async function AboutPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale: raw } = await params;
   const locale: Locale = isLocale(raw) ? raw : "fr";
   const dict = getDictionary(locale);

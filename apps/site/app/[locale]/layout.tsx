@@ -76,9 +76,9 @@ export async function generateMetadata({
   const ui = getUi(locale);
 
   return {
-    // ⚠️ TEMPORAIRE — bissection : `metadataBase: new URL(SITE_URL)` retiré. C'est la
-    // seule valeur des métadonnées qui ne soit pas un objet simple ; tout le reste est
-    // déjà disculpé par le `generateMetadata` des pages, qui lui passe.
+    // ⚠️ PAS de `metadataBase: new URL(SITE_URL)` ici — voir la note en bas de fichier.
+    // Toutes les URL de métadonnées de ce site sont absolues, donc rien n'a besoin d'être
+    // résolu contre une base.
     title: {
       default: `${ORG.name} — ${dict.org.slogan}`,
       template: `%s — ${ORG.name}`,
@@ -103,7 +103,12 @@ export async function generateMetadata({
           ],
     authors: [{ name: ORG.name }],
     robots: { index: true, follow: true },
-    icons: { icon: "/logo-qardan-hassana.jpg", apple: "/logo-qardan-hassana.jpg" },
+    // Absolues, et non `/logo-…` : c'était la seule URL relative du site, donc la seule
+    // raison qu'avait `metadataBase` d'exister.
+    icons: {
+      icon: `${SITE_URL}/logo-qardan-hassana.jpg`,
+      apple: `${SITE_URL}/logo-qardan-hassana.jpg`,
+    },
     alternates: {
       canonical: `${SITE_URL}/${locale}`,
       languages: {
@@ -172,3 +177,24 @@ export default async function LocaleLayout({
     </html>
   );
 }
+
+/**
+ * ⚠️ NE PAS ajouter `metadataBase: new URL(...)` dans `generateMetadata`.
+ *
+ * C'est pourtant l'usage documenté par Next — mais sur la plateforme de build de Vercel,
+ * il fait échouer la génération statique de TOUTES les pages, avec un message masqué en
+ * production (« An error occurred in the Server Components render ») qui ne nomme ni le
+ * coupable ni la ligne. Le build local, lui, passe : le défaut ne se voit qu'à distance.
+ *
+ * L'arbre de métadonnées est sérialisé au pré-rendu, et `new URL(...)` y est la seule
+ * valeur qui ne soit pas un objet simple. Vérifié par bissection : la mise en page
+ * complète — scripts de `<head>`, ThemeProvider, Header, Footer compris — se pré-rend
+ * sans erreur dès que cette seule ligne disparaît, et échoue dès qu'elle revient.
+ *
+ * On n'en a de toute façon aucun besoin : `metadataBase` ne sert qu'à résoudre les URL
+ * RELATIVES, et il n'y en a plus une seule ici. `pageMetadata()` construit déjà des URL
+ * absolues à partir de `SITE_URL`, et les icônes ci-dessus le font aussi.
+ *
+ * ➜ Pour changer le domaine, il n'y a donc qu'un seul point d'entrée :
+ *   la variable d'environnement `NEXT_PUBLIC_SITE_URL`.
+ */
