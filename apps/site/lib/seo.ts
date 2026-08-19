@@ -5,7 +5,23 @@ import { CONTACTS, ORG, getDictionary, type Locale } from "@qardan/shared";
  * SEO — visibilité locale Côte d'Ivoire / Abidjan (exigence §6 du cahier des charges).
  * L'URL canonique vient de l'environnement : elle change entre la préprod et la prod.
  */
-export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://qardanhassana.ci";
+/**
+ * ⚠️ `??` ne rattrape que `null` et `undefined` — PAS la chaîne vide.
+ *
+ * Rencontré en production : la variable existait chez l'hébergeur avec une valeur vide.
+ * `SITE_URL` valait donc `""`, et tout ce qui en dérive devenait relatif — canoniques
+ * `<link rel="canonical" href="/fr/a-propos">`, `Sitemap: /sitemap.xml`, et un sitemap
+ * dont les `<loc>` sont relatives, ce qui le rend tout simplement invalide. Le site
+ * s'affichait parfaitement pendant ce temps : rien ne se voyait à l'œil nu.
+ *
+ * On traite donc une valeur blanche comme absente, et on retire la barre oblique finale
+ * (`https://x.ci/` + `/fr` donnerait `https://x.ci//fr`).
+ */
+const CONFIGURED_SITE_URL = process.env.NEXT_PUBLIC_SITE_URL?.trim();
+
+export const SITE_URL = (
+  CONFIGURED_SITE_URL ? CONFIGURED_SITE_URL : "https://qardanhassana.ci"
+).replace(/\/+$/, "");
 
 /**
  * Métadonnées d'une page, avec ses **alternates `hreflang`**.
