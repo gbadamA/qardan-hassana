@@ -16,7 +16,8 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { DemoBanner } from "@/components/DemoBanner";
 import { RevealProvider } from "@/components/Reveal";
-import { ThemeProvider, themeBootstrapScript } from "@/lib/theme";
+import { ThemeProvider } from "@/lib/theme";
+import { themeBootstrapScript } from "@/lib/theme-script";
 import { SITE_URL, organizationJsonLd } from "@/lib/seo";
 
 /**
@@ -32,16 +33,12 @@ const displayLatin = Plus_Jakarta_Sans({
   weight: ["600", "700", "800"],
   variable: "--font-display-latin",
   display: "swap",
-  // ⚠️ TEMPORAIRE — diagnostic : coupe les indices de préchargement de police.
-  preload: false,
 });
 
 const bodyLatin = Inter({
   subsets: ["latin"],
   variable: "--font-body-latin",
   display: "swap",
-  // ⚠️ TEMPORAIRE — diagnostic : coupe les indices de préchargement de police.
-  preload: false,
 });
 
 /**
@@ -55,8 +52,6 @@ const displayArabic = Noto_Kufi_Arabic({
   weight: ["600", "700", "800"],
   variable: "--font-display-arabic",
   display: "swap",
-  // ⚠️ TEMPORAIRE — diagnostic : coupe les indices de préchargement de police.
-  preload: false,
 });
 
 const bodyArabic = Noto_Naskh_Arabic({
@@ -64,8 +59,6 @@ const bodyArabic = Noto_Naskh_Arabic({
   weight: ["400", "500", "600", "700"],
   variable: "--font-body-arabic",
   display: "swap",
-  // ⚠️ TEMPORAIRE — diagnostic : coupe les indices de préchargement de police.
-  preload: false,
 });
 
 export function generateStaticParams() {
