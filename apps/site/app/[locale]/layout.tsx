@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Inter, Noto_Kufi_Arabic, Noto_Naskh_Arabic, Plus_Jakarta_Sans } from "next/font/google";
 import { notFound } from "next/navigation";
 import "../globals.css";
+import { getUi } from "@/content";
 import {
   LOCALES,
   LOCALE_DIR,
@@ -11,14 +12,7 @@ import {
   isLocale,
   type Locale,
 } from "@qardan/shared";
-import { getUi } from "@/content";
-import { Header } from "@/components/Header";
-import { Footer } from "@/components/Footer";
-import { DemoBanner } from "@/components/DemoBanner";
-import { RevealProvider } from "@/components/Reveal";
-import { ThemeProvider } from "@/lib/theme";
-import { themeBootstrapScript } from "@/lib/theme-script";
-import { SITE_URL, organizationJsonLd } from "@/lib/seo";
+import { SITE_URL } from "@/lib/seo";
 
 /**
  * Layout RACINE (il porte `<html>`), sous le segment `[locale]` : c'est la seule façon de
@@ -131,42 +125,15 @@ export default async function LocaleLayout({
   if (!isLocale(raw)) notFound();
   const locale: Locale = raw;
 
-  const dict = getDictionary(locale);
-  const ui = getUi(locale);
   const dir = LOCALE_DIR[locale];
-
   const fontVars = `${displayLatin.variable} ${bodyLatin.variable} ${displayArabic.variable} ${bodyArabic.variable}`;
 
+  // ⚠️ TEMPORAIRE — bissection : mise en page réduite. Les scripts de <head> et les cinq
+  // composants (ThemeProvider, DemoBanner, Header, Footer, RevealProvider) sont retirés.
+  // `generateMetadata` et les polices restent.
   return (
-    <html
-      lang={LOCALE_TAGS[locale]}
-      dir={dir}
-      suppressHydrationWarning
-      className={`${fontVars} ${locale === "ar" ? "locale-ar" : "locale-fr"}`}
-    >
-      <head>
-        {/* Applique le thème AVANT le premier rendu : sinon un écran clair clignote une frame. */}
-        <script dangerouslySetInnerHTML={{ __html: themeBootstrapScript }} />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd(locale)) }}
-        />
-      </head>
-      <body className="min-h-screen bg-light-bg text-light-text antialiased dark:bg-dark-bg dark:text-dark-text">
-        <ThemeProvider>
-          <a
-            href="#contenu"
-            className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:z-[60] focus:rounded-md focus:bg-primary focus:px-4 focus:py-2 focus:text-white focus:ltr:left-4 focus:rtl:right-4"
-          >
-            {ui.common.skipToContent}
-          </a>
-          <DemoBanner ui={ui} />
-          <Header locale={locale} ui={ui} dict={dict} />
-          <main id="contenu">{children}</main>
-          <Footer locale={locale} ui={ui} dict={dict} />
-          <RevealProvider />
-        </ThemeProvider>
-      </body>
+    <html lang={LOCALE_TAGS[locale]} dir={dir} suppressHydrationWarning className={fontVars}>
+      <body>{children}</body>
     </html>
   );
 }
