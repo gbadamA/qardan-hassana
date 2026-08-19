@@ -1,51 +1,55 @@
 # Déploiement — Vercel (forfait gratuit) + Supabase
 
-> État au 2026-08-15 : **le code est prêt, l'infrastructure ne l'est pas encore.**
-> Deux verrous, tous deux côté compte, aucun côté code. Ils sont décrits ci-dessous
-> avec la marche à suivre exacte.
+> État au 2026-08-19 : **la base de données est en ligne et vérifiée.** Reste l'import
+> des deux applications sur Vercel, qui doit se faire depuis l'interface web — le
+> connecteur de la session est en lecture seule.
 
 ---
 
-## Verrou 1 — Supabase : plafond du forfait gratuit atteint
+## Supabase — ✅ fait
 
-Le forfait gratuit Supabase autorise **2 projets actifs par organisation**. L'organisation
-`gbadamA's Org` en compte déjà deux :
-
-| Projet | État |
+| | |
 |---|---|
-| `systemcollaboratif` | actif |
-| `preventix-360` | actif |
-| `ventespro-crm` | **en pause** (ne compte pas) |
+| Projet | `qardan-hassana` |
+| Référence | `pbrqenzixxvpwukyextk` |
+| Région | `eu-west-3` (Paris) |
+| URL | `https://pbrqenzixxvpwukyextk.supabase.co` |
+| Forfait | gratuit — 0 €/mois |
 
-La création d'un troisième projet est refusée. Le coût d'un projet supplémentaire a été
-vérifié : **0 €/mois** — ce n'est donc pas une question d'argent, mais de quota.
+Un emplacement a été libéré en mettant `preventix-360` **en pause** (données conservées,
+réactivation en un clic depuis le tableau de bord Supabase). Le forfait gratuit plafonne
+à 2 projets actifs par organisation.
 
-**Trois issues possibles**, à trancher par vous :
+**Appliqué et vérifié :**
 
-1. **Mettre en pause un projet existant** (tableau de bord Supabase → projet → Settings →
-   Pause). Une base en pause conserve ses données et se réactive en un clic.
-2. **Réutiliser une base existante** en y ajoutant les 7 migrations de ce projet, sous un
-   schéma dédié. Déconseillé : la RLS et les rôles seraient partagés avec l'autre produit.
-3. **Passer l'organisation au forfait Pro** (25 $/mois) — hors de votre demande.
+- les 7 migrations → 12 tables, 9 énumérations, 29 policies RLS, 3 policies Storage,
+  bucket privé `documents`, 3 tables en Realtime ;
+- l'Edge Function `create-member` (version 1, `verify_jwt` activé) ;
+- un don anonyme passe par `submit_public_donation` et rend sa référence ;
+- un visiteur anonyme **ne peut pas lire** la table `donations` — la RLS tient ;
+- un montant sous le minimum est refusé **par la base**, pas seulement par le formulaire.
 
-Une fois un emplacement libéré :
+### Premier compte administrateur
 
-```bash
-# depuis la racine du projet
-supabase link --project-ref <REF_DU_NOUVEAU_PROJET>
-supabase db push          # applique les 7 migrations
-supabase functions deploy create-member
-```
+Créé pour amorcer le système — l'Edge Function ne peut pas servir ici, elle exige un
+appelant déjà `super_admin`.
 
-⚠️ **Ne pas exécuter `supabase/seed.sql` en production** : il crée des comptes dont les
-mots de passe sont en clair dans le fichier. Créez le premier compte administrateur à la
-main dans le tableau de bord Supabase (Authentication → Add user), puis insérez sa ligne
-dans `profiles` avec le rôle `super_admin` ; tous les autres comptes se créeront ensuite
-depuis l'écran Administration.
+| | |
+|---|---|
+| Identifiant | `admin@qardanhassana.ci` |
+| Mot de passe provisoire | **communiqué hors dépôt** — ce fichier est public |
+| Rôle | `super_admin` |
+
+⚠️ **À changer dès la première connexion** (Supabase → Authentication → l'utilisateur →
+Reset password). Tous les autres comptes se créent ensuite depuis l'écran Administration
+du back-office, qui passe par l'Edge Function.
+
+⚠️ **Ne jamais exécuter `supabase/seed.sql` sur cette base** : c'est un jeu de
+développement, avec des mots de passe en clair.
 
 ---
 
-## Verrou 2 — Vercel : le connecteur ne peut pas créer de projet
+## Vercel — à importer depuis l'interface
 
 Le connecteur Vercel de cette session est en **lecture seule** : il liste les projets et
 les déploiements, mais la création répond `403 forbidden`. Le CLI, lui, est déconnecté et
@@ -90,8 +94,8 @@ trois environnements (Production, Preview, Development).
 
 | Variable | Où la trouver |
 |---|---|
-| `NEXT_PUBLIC_SUPABASE_URL` | Supabase → Project Settings → API → Project URL |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | même écran → `anon` `public` |
+| `NEXT_PUBLIC_SUPABASE_URL` | `https://pbrqenzixxvpwukyextk.supabase.co` |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase → Project Settings → API → clé `anon` `public` (non reproduite ici) |
 | `NEXT_PUBLIC_CONTACT_PCA_NAME` | ⚠️ voir `.env.local` (jamais versionné) |
 | `NEXT_PUBLIC_CONTACT_PCA_PHONE` | format `+225XXXXXXXXXX` |
 | `NEXT_PUBLIC_CONTACT_SECRETAIRE_NAME` | |
