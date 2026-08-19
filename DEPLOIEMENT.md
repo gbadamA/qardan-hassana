@@ -119,6 +119,35 @@ modification, il faut **redéployer** ; changer la valeur ne suffit pas.
 
 ---
 
+## Piège rencontré — `metadataBase` fait échouer le build (résolu)
+
+Le premier import du **site** a échoué au build, alors que le même commit se construisait
+sans erreur en local, sur un clone neuf et sans variables d'environnement. Le journal ne
+donnait que le message masqué de production :
+
+```
+Error occurred prerendering page "/fr/a-propos".
+[Error: An error occurred in the Server Components render. The specific message is
+omitted in production builds…] { digest: '3167541878' }
+```
+
+Ni fichier, ni ligne, ni cause. Le coupable etait `metadataBase: new URL(SITE_URL)` dans
+le `generateMetadata` de la mise en page : l'arbre de metadonnees est serialise au
+pre-rendu, et l'instance `URL` y est la seule valeur qui ne soit pas un objet simple.
+
+Une **chaine** fait le meme travail sans casser le build : Next ne s'en sert que comme base
+de `new URL(url, base)`. C'est ce qui est en place.
+
+> Ne pas la retirer non plus. Sans `metadataBase`, Next rabote l'origine et emet
+> `<link rel="canonical" href="/fr/a-propos">`. Sur un hote `vercel.app`, chaque page se
+> declarerait canonique d'elle-meme : le site s'afficherait parfaitement pendant que le
+> referencement se degraderait, sans le moindre signe visible.
+
+> Le back-office, lui, n'a jamais eu de `metadataBase` — c'est pour cela que lui seul se
+> construisait dès le premier import.
+
+---
+
 ## Ce qui fonctionne sans Supabase
 
 Le site se déploie et s'affiche entièrement : les 45 pages sont pré-rendues et le contenu

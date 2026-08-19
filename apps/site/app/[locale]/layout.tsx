@@ -76,9 +76,8 @@ export async function generateMetadata({
   const ui = getUi(locale);
 
   return {
-    // ⚠️ PAS de `metadataBase: new URL(SITE_URL)` ici — voir la note en bas de fichier.
-    // Toutes les URL de métadonnées de ce site sont absolues, donc rien n'a besoin d'être
-    // résolu contre une base.
+    // ⚠️ Une CHAÎNE, jamais `new URL(...)` — voir la note en fin de fichier.
+    metadataBase: SITE_URL as unknown as URL,
     title: {
       default: `${ORG.name} — ${dict.org.slogan}`,
       template: `%s — ${ORG.name}`,
@@ -179,22 +178,24 @@ export default async function LocaleLayout({
 }
 
 /**
- * ⚠️ NE PAS ajouter `metadataBase: new URL(...)` dans `generateMetadata`.
+ * ⚠️ `metadataBase` doit rester une CHAÎNE, jamais `new URL(...)`.
  *
- * C'est pourtant l'usage documenté par Next — mais sur la plateforme de build de Vercel,
- * il fait échouer la génération statique de TOUTES les pages, avec un message masqué en
- * production (« An error occurred in the Server Components render ») qui ne nomme ni le
- * coupable ni la ligne. Le build local, lui, passe : le défaut ne se voit qu'à distance.
+ * `new URL(...)` est pourtant l'usage documenté par Next, et le build local passe avec.
+ * Mais sur la plateforme de build de Vercel, il fait échouer la génération statique des
+ * 45 pages, avec le message masqué de production (« An error occurred in the Server
+ * Components render ») qui ne nomme ni le fichier ni la ligne. L'arbre de métadonnées est
+ * sérialisé au pré-rendu, et l'instance `URL` y est la seule valeur qui ne soit pas un
+ * objet simple. Établi par bissection sur le déploiement : la mise en page complète se
+ * pré-rend dès que cette ligne disparaît, et échoue dès qu'elle revient.
  *
- * L'arbre de métadonnées est sérialisé au pré-rendu, et `new URL(...)` y est la seule
- * valeur qui ne soit pas un objet simple. Vérifié par bissection : la mise en page
- * complète — scripts de `<head>`, ThemeProvider, Header, Footer compris — se pré-rend
- * sans erreur dès que cette seule ligne disparaît, et échoue dès qu'elle revient.
+ * Next accepte une chaîne à l'exécution : elle ne lui sert que de base à `new URL(url,
+ * base)`. D'où le transtypage, qui ment au type mais pas au moteur.
  *
- * On n'en a de toute façon aucun besoin : `metadataBase` ne sert qu'à résoudre les URL
- * RELATIVES, et il n'y en a plus une seule ici. `pageMetadata()` construit déjà des URL
- * absolues à partir de `SITE_URL`, et les icônes ci-dessus le font aussi.
+ * ⚠️ Et il faut la garder : SANS `metadataBase`, Next rabote l'origine de toutes les URL
+ * absolues et émet `<link rel="canonical" href="/fr/a-propos">`. Sur un hôte `vercel.app`,
+ * chaque page se déclarerait alors canonique d'elle-même — exactement le contenu dupliqué
+ * que le `hreflang` existe pour éviter. C'est une régression invisible à l'œil nu : le site
+ * s'affiche parfaitement pendant que le référencement se dégrade.
  *
- * ➜ Pour changer le domaine, il n'y a donc qu'un seul point d'entrée :
- *   la variable d'environnement `NEXT_PUBLIC_SITE_URL`.
+ * ➜ Pour changer le domaine, un seul point d'entrée : `NEXT_PUBLIC_SITE_URL`.
  */
