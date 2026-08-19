@@ -32,12 +32,16 @@ const displayLatin = Plus_Jakarta_Sans({
   weight: ["600", "700", "800"],
   variable: "--font-display-latin",
   display: "swap",
+  // ⚠️ TEMPORAIRE — diagnostic : coupe les indices de préchargement de police.
+  preload: false,
 });
 
 const bodyLatin = Inter({
   subsets: ["latin"],
   variable: "--font-body-latin",
   display: "swap",
+  // ⚠️ TEMPORAIRE — diagnostic : coupe les indices de préchargement de police.
+  preload: false,
 });
 
 /**
@@ -51,6 +55,8 @@ const displayArabic = Noto_Kufi_Arabic({
   weight: ["600", "700", "800"],
   variable: "--font-display-arabic",
   display: "swap",
+  // ⚠️ TEMPORAIRE — diagnostic : coupe les indices de préchargement de police.
+  preload: false,
 });
 
 const bodyArabic = Noto_Naskh_Arabic({
@@ -58,17 +64,9 @@ const bodyArabic = Noto_Naskh_Arabic({
   weight: ["400", "500", "600", "700"],
   variable: "--font-body-arabic",
   display: "swap",
+  // ⚠️ TEMPORAIRE — diagnostic : coupe les indices de préchargement de police.
+  preload: false,
 });
-
-/**
- * ⚠️ TEMPORAIRE — diagnostic. À RETIRER : le site doit rester pré-rendu.
- *
- * Posée sur la mise en page, cette option s'applique à toutes les pages en dessous :
- * plus aucune n'est pré-rendue, le build passe et le site se déploie. L'erreur se
- * produira alors à l'exécution, où Vercel journalise la pile complète — non masquée,
- * contrairement au build.
- */
-export const dynamic = "force-dynamic";
 
 export function generateStaticParams() {
   return LOCALES.map((locale) => ({ locale }));
