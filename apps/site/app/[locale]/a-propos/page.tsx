@@ -14,6 +14,15 @@ import { Icon } from "@/components/Icon";
 import { PageHero, SectionHeading } from "@/components/ui";
 import { pageMetadata } from "@/lib/seo";
 
+/**
+ * ⚠️ TEMPORAIRE — diagnostic.
+ *
+ * En rendu dynamique, la page n'est plus pré-rendue au build : celui-ci ira au bout. Si
+ * une autre page échoue alors, la cause est partagée (mise en page) ; si le build passe,
+ * l'erreur se produira à l'exécution, où Vercel journalise la pile NON masquée.
+ */
+export const dynamic = "force-dynamic";
+
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale: raw } = await params;
   const locale: Locale = isLocale(raw) ? raw : "fr";
