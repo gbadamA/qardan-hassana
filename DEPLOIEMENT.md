@@ -135,13 +135,30 @@ Ni fichier, ni ligne, ni cause. Le coupable était `metadataBase: new URL(SITE_U
 le `generateMetadata` de la mise en page : l'arbre de métadonnées est sérialisé au
 pré-rendu, et l'instance `URL` y est la seule valeur qui ne soit pas un objet simple.
 
-Une **chaîne** fait le même travail sans casser le build : Next ne s'en sert que comme base
-de `new URL(url, base)`. C'est ce qui est en place.
+La ligne a simplement été retirée : `metadataBase` ne sert qu'à résoudre les URL
+*relatives*, et il n'y en a plus une seule — `pageMetadata()` et les icônes construisent
+tout à partir de `SITE_URL`. Vérifié en construisant sans : canoniques, `hreflang`,
+`og:url` et icônes ressortent identiques, tous absolus.
 
-> ⚠️ Ne pas la retirer non plus. Sans `metadataBase`, Next rabote l'origine et émet
-> `<link rel="canonical" href="/fr/a-propos">`. Sur un hôte `vercel.app`, chaque page se
-> déclarerait canonique d'elle-même : le site s'afficherait parfaitement pendant que le
-> référencement se dégraderait, sans le moindre signe visible.
+> Si une URL relative réapparaît un jour dans les métadonnées (une image Open Graph, par
+> exemple), il faudra une base : passer alors une **chaîne**, jamais `new URL(...)` — Next
+> ne s'en sert que comme second argument de `new URL(url, base)`, et une chaîne se
+> sérialise.
+
+### Et un second piège, indépendant : la variable définie mais vide
+
+Après ce correctif, les URL sortaient encore relatives — `<loc>/fr</loc>` dans le sitemap,
+`Sitemap: /sitemap.xml` dans `robots.txt`. Cause : `NEXT_PUBLIC_SITE_URL` **existe** sur
+Vercel mais **sans valeur**, et `??` ne rattrape que `null` et `undefined`, jamais la chaîne
+vide. `SITE_URL` valait donc `""` et tout ce qui en dérivait naissait relatif.
+
+Rien ne se voyait : le site s'affichait parfaitement pendant que chaque page se déclarait
+canonique d'elle-même sur l'hôte qui la servait, que les `hreflang` perdaient leur objet, et
+que le sitemap devenait formellement invalide (la norme exige des `<loc>` absolues).
+
+`lib/seo.ts` traite désormais une valeur blanche comme absente et retire la barre oblique
+finale. ➜ **Renseigner tout de même la variable pour de bon** : le repli est un domaine
+codé en dur, pas une adresse choisie.
 
 > Le back-office, lui, n'a jamais eu de `metadataBase` — c'est pour cela que lui seul se
 > construisait dès le premier import.

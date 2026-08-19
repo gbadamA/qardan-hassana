@@ -76,8 +76,7 @@ export async function generateMetadata({
   const ui = getUi(locale);
 
   return {
-    // ⚠️ Une CHAÎNE, jamais `new URL(...)` — voir la note en fin de fichier.
-    metadataBase: SITE_URL as unknown as URL,
+    // ⚠️ Pas de `metadataBase` — voir la note en fin de fichier.
     title: {
       default: `${ORG.name} — ${dict.org.slogan}`,
       template: `%s — ${ORG.name}`,
@@ -178,24 +177,24 @@ export default async function LocaleLayout({
 }
 
 /**
- * ⚠️ `metadataBase` doit rester une CHAÎNE, jamais `new URL(...)`.
+ * ⚠️ NE PAS ajouter `metadataBase: new URL(...)` dans `generateMetadata`.
  *
- * `new URL(...)` est pourtant l'usage documenté par Next, et le build local passe avec.
- * Mais sur la plateforme de build de Vercel, il fait échouer la génération statique des
- * 45 pages, avec le message masqué de production (« An error occurred in the Server
- * Components render ») qui ne nomme ni le fichier ni la ligne. L'arbre de métadonnées est
- * sérialisé au pré-rendu, et l'instance `URL` y est la seule valeur qui ne soit pas un
- * objet simple. Établi par bissection sur le déploiement : la mise en page complète se
- * pré-rend dès que cette ligne disparaît, et échoue dès qu'elle revient.
+ * C'est pourtant l'usage documenté par Next, et le build local passe avec. Mais sur la
+ * plateforme de build de Vercel, il fait échouer la génération statique des 45 pages, avec
+ * le message masqué de production (« An error occurred in the Server Components render »,
+ * plus un simple `digest`) qui ne nomme ni le fichier, ni la ligne, ni la cause. L'arbre de
+ * métadonnées est sérialisé au pré-rendu, et l'instance `URL` y est la seule valeur qui ne
+ * soit pas un objet simple. Établi par bissection sur le déploiement : la mise en page
+ * complète se pré-rend dès que cette ligne disparaît, et échoue dès qu'elle revient.
  *
- * Next accepte une chaîne à l'exécution : elle ne lui sert que de base à `new URL(url,
- * base)`. D'où le transtypage, qui ment au type mais pas au moteur.
+ * On n'en a de toute façon aucun besoin : `metadataBase` ne sert qu'à résoudre les URL
+ * RELATIVES, et il n'y en a plus une seule ici — `pageMetadata()` et les icônes ci-dessus
+ * construisent tout à partir de `SITE_URL`. Vérifié en construisant sans : canoniques,
+ * `hreflang`, `og:url` et icônes ressortent identiques, tous absolus.
  *
- * ⚠️ Et il faut la garder : SANS `metadataBase`, Next rabote l'origine de toutes les URL
- * absolues et émet `<link rel="canonical" href="/fr/a-propos">`. Sur un hôte `vercel.app`,
- * chaque page se déclarerait alors canonique d'elle-même — exactement le contenu dupliqué
- * que le `hreflang` existe pour éviter. C'est une régression invisible à l'œil nu : le site
- * s'affiche parfaitement pendant que le référencement se dégrade.
+ * ⚠️ Si un jour une URL relative apparaît dans les métadonnées (une image Open Graph, par
+ * exemple), il faudra une base : passer alors une CHAÎNE, jamais `new URL(...)`. Next ne
+ * s'en sert que comme second argument de `new URL(url, base)`, et une chaîne se sérialise.
  *
  * ➜ Pour changer le domaine, un seul point d'entrée : `NEXT_PUBLIC_SITE_URL`.
  */
