@@ -60,6 +60,16 @@ const bodyArabic = Noto_Naskh_Arabic({
   display: "swap",
 });
 
+/**
+ * ⚠️ TEMPORAIRE — diagnostic. À RETIRER : le site doit rester pré-rendu.
+ *
+ * Posée sur la mise en page, cette option s'applique à toutes les pages en dessous :
+ * plus aucune n'est pré-rendue, le build passe et le site se déploie. L'erreur se
+ * produira alors à l'exécution, où Vercel journalise la pile complète — non masquée,
+ * contrairement au build.
+ */
+export const dynamic = "force-dynamic";
+
 export function generateStaticParams() {
   return LOCALES.map((locale) => ({ locale }));
 }
