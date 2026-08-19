@@ -132,7 +132,25 @@ const fileSubmissionStore: SubmissionStore = {
   },
 };
 
-/** Supabase dès qu'il est configuré ; fichier local sinon. */
+/**
+ * Supabase dès qu'il est configuré ; fichier local sinon — et UNIQUEMENT en développement.
+ *
+ * ⚠️ En production, le repli fichier est un piège : un hébergement sans disque
+ * persistant (Vercel, Netlify) a un système de fichiers en LECTURE SEULE, et
+ * l'écriture lève une erreur brute au milieu d'une Server Action. Le visiteur voit
+ * alors un écran d'erreur après avoir saisi son don — le pire moment possible.
+ * Mieux vaut refuser proprement : l'appelant traduit `errors.submitFailed` et
+ * affiche un message qui invite à téléphoner.
+ */
 export function getSubmissionStore(): SubmissionStore {
-  return isSupabaseConfigured() ? supabaseSubmissionStore : fileSubmissionStore;
+  if (isSupabaseConfigured()) return supabaseSubmissionStore;
+  if (process.env.NODE_ENV === "production") {
+    return {
+      id: "unconfigured",
+      async save() {
+        throw new Error("errors.submitFailed");
+      },
+    };
+  }
+  return fileSubmissionStore;
 }

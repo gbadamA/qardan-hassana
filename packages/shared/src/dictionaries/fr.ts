@@ -146,6 +146,7 @@ export const fr = {
     "errors.programs.min": "Choisissez au moins un programme.",
     "errors.availability.min": "Indiquez vos disponibilités.",
     "errors.tooLong": "Ce champ est trop long.",
+    "errors.submitFailed": "Le service d'enregistrement est momentanément indisponible. Appelez-nous, ou réessayez plus tard.",
     "errors.form": "Quelques informations doivent être corrigées.",
   },
 

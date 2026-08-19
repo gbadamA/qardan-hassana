@@ -135,6 +135,7 @@ export const ar: Dictionary = {
     "errors.programs.min": "اختر برنامجًا واحدًا على الأقل.",
     "errors.availability.min": "يرجى تحديد أوقات توفرك.",
     "errors.tooLong": "هذا الحقل طويل جدًا.",
+    "errors.submitFailed": "خدمة التسجيل غير متاحة مؤقتًا. اتصل بنا أو أعد المحاولة لاحقًا.",
     "errors.form": "بعض المعلومات بحاجة إلى تصحيح.",
   },
 

@@ -37,6 +37,24 @@ function flattenErrors(issues: { path: (string | number)[]; message: string }[])
 }
 
 /**
+ * Enveloppe une écriture de soumission.
+ * Toute panne du stockage (Supabase injoignable, disque en lecture seule sur un
+ * hébergement sans FS persistant) devient un `FormState` d'erreur traduisible, au lieu
+ * d'une exception qui afficherait un écran d'erreur au visiteur juste après sa saisie.
+ */
+async function saveOrFail(
+  kind: "contact" | "benevole" | "don",
+  payload: unknown,
+): Promise<{ reference: string } | FormState> {
+  try {
+    return await getSubmissionStore().save(kind, payload);
+  } catch (e) {
+    const key = e instanceof Error && e.message.startsWith("errors.") ? e.message : "errors.submitFailed";
+    return { status: "error", messageKey: key };
+  }
+}
+
+/**
  * Passerelle de paiement par PREUVE — implémentation actuelle du port `PaymentGateway`.
  * Elle n'encaisse rien : elle enregistre une intention. La marche à suivre affichée au
  * donateur vient du dictionnaire de sa langue (`dict.paymentInstructions`), côté client.
@@ -48,7 +66,9 @@ const manualTransferGateway: PaymentGateway = {
   id: "manual-transfer",
 
   async createIntent(intent: DonationIntent): Promise<DonationReceipt> {
-    const { reference } = await getSubmissionStore().save("don", intent);
+    const saved = await saveOrFail("don", intent);
+    if ("status" in saved) throw new Error(saved.messageKey ?? "errors.submitFailed");
+    const { reference } = saved;
     return {
       reference,
       status: "en_attente",
@@ -81,9 +101,14 @@ export async function submitDonation(_prev: FormState, formData: FormData): Prom
     };
   }
 
-  const receipt = await manualTransferGateway.createIntent(parsed.data);
-
-  return { status: "success", reference: receipt.reference, receipt };
+  try {
+    const receipt = await manualTransferGateway.createIntent(parsed.data);
+    return { status: "success", reference: receipt.reference, receipt };
+  } catch (e) {
+    const key =
+      e instanceof Error && e.message.startsWith("errors.") ? e.message : "errors.submitFailed";
+    return { status: "error", messageKey: key };
+  }
 }
 
 export async function submitContact(_prev: FormState, formData: FormData): Promise<FormState> {
@@ -103,8 +128,9 @@ export async function submitContact(_prev: FormState, formData: FormData): Promi
     };
   }
 
-  const { reference } = await getSubmissionStore().save("contact", parsed.data);
-  return { status: "success", reference };
+  const saved = await saveOrFail("contact", parsed.data);
+  if ("status" in saved) return saved;
+  return { status: "success", reference: saved.reference };
 }
 
 export async function submitVolunteer(_prev: FormState, formData: FormData): Promise<FormState> {
@@ -129,6 +155,7 @@ export async function submitVolunteer(_prev: FormState, formData: FormData): Pro
     };
   }
 
-  const { reference } = await getSubmissionStore().save("benevole", parsed.data);
-  return { status: "success", reference };
+  const saved = await saveOrFail("benevole", parsed.data);
+  if ("status" in saved) return saved;
+  return { status: "success", reference: saved.reference };
 }
