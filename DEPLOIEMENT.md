@@ -131,17 +131,17 @@ Error occurred prerendering page "/fr/a-propos".
 omitted in production builds…] { digest: '3167541878' }
 ```
 
-Ni fichier, ni ligne, ni cause. Le coupable etait `metadataBase: new URL(SITE_URL)` dans
-le `generateMetadata` de la mise en page : l'arbre de metadonnees est serialise au
-pre-rendu, et l'instance `URL` y est la seule valeur qui ne soit pas un objet simple.
+Ni fichier, ni ligne, ni cause. Le coupable était `metadataBase: new URL(SITE_URL)` dans
+le `generateMetadata` de la mise en page : l'arbre de métadonnées est sérialisé au
+pré-rendu, et l'instance `URL` y est la seule valeur qui ne soit pas un objet simple.
 
-Une **chaine** fait le meme travail sans casser le build : Next ne s'en sert que comme base
+Une **chaîne** fait le même travail sans casser le build : Next ne s'en sert que comme base
 de `new URL(url, base)`. C'est ce qui est en place.
 
-> Ne pas la retirer non plus. Sans `metadataBase`, Next rabote l'origine et emet
-> `<link rel="canonical" href="/fr/a-propos">`. Sur un hote `vercel.app`, chaque page se
-> declarerait canonique d'elle-meme : le site s'afficherait parfaitement pendant que le
-> referencement se degraderait, sans le moindre signe visible.
+> ⚠️ Ne pas la retirer non plus. Sans `metadataBase`, Next rabote l'origine et émet
+> `<link rel="canonical" href="/fr/a-propos">`. Sur un hôte `vercel.app`, chaque page se
+> déclarerait canonique d'elle-même : le site s'afficherait parfaitement pendant que le
+> référencement se dégraderait, sans le moindre signe visible.
 
 > Le back-office, lui, n'a jamais eu de `metadataBase` — c'est pour cela que lui seul se
 > construisait dès le premier import.
