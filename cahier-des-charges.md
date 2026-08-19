@@ -38,9 +38,14 @@ Conseil d'Administration
 
 | Rôle | Nom | Téléphone |
 |---|---|---|
-| PCA (Président du Conseil d'Administration) | Imam Traoré Yaya | 07 47 00 83 83 |
-| Secrétaire Exécutif | Sanogo Mamadou | 07 07 30 22 29 |
-| Trésorier | Traoré Sholly | 07 07 94 15 71 |
+| PCA (Président du Conseil d'Administration) | *(voir `.env.local`)* | *(voir `.env.local`)* |
+| Secrétaire Exécutif | *(voir `.env.local`)* | *(voir `.env.local`)* |
+| Trésorier | *(voir `.env.local`)* | *(voir `.env.local`)* |
+
+> ⚠️ Les noms et numéros des responsables ont été retirés de ce document versionné : le
+> dépôt est public. Ils vivent dans les variables d'environnement (`.env.example` liste
+> les clés attendues).
+
 
 ---
 

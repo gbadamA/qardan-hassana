@@ -33,10 +33,10 @@ select
   jsonb_build_object('full_name', u.full_name),
   '', '', '', ''
 from (values
-  ('11111111-1111-4111-8111-111111111111'::uuid, 'pca@qardan.ci',         'Imam Traoré Yaya'),
-  ('22222222-2222-4222-8222-222222222222'::uuid, 'tresorier@qardan.ci',   'Traoré Sholly'),
+  ('11111111-1111-4111-8111-111111111111'::uuid, 'pca@qardan.ci',         'Amadou Diarra'),
+  ('22222222-2222-4222-8222-222222222222'::uuid, 'tresorier@qardan.ci',   'Salif Ouédraogo'),
   ('33333333-3333-4333-8333-333333333333'::uuid, 'commissaire@qardan.ci', 'Koné Ibrahim'),
-  ('44444444-4444-4444-8444-444444444444'::uuid, 'direction@qardan.ci',   'Sanogo Mamadou'),
+  ('44444444-4444-4444-8444-444444444444'::uuid, 'direction@qardan.ci',   'Mariam Cissé'),
   ('55555555-5555-4555-8555-555555555555'::uuid, 'social@qardan.ci',      'Diallo Aminata')
 ) as u(id, email, full_name);
 
@@ -49,10 +49,10 @@ select
 from auth.users u;
 
 insert into public.profiles (id, full_name, role, program, email, phone) values
-  ('11111111-1111-4111-8111-111111111111', 'Imam Traoré Yaya', 'super_admin',   null,     'pca@qardan.ci',         '+2250747008383'),
-  ('22222222-2222-4222-8222-222222222222', 'Traoré Sholly',    'tresorier',     null,     'tresorier@qardan.ci',   '+2250707941571'),
+  ('11111111-1111-4111-8111-111111111111', 'Amadou Diarra', 'super_admin',   null,     'pca@qardan.ci',         '+2250700000001'),
+  ('22222222-2222-4222-8222-222222222222', 'Salif Ouédraogo',    'tresorier',     null,     'tresorier@qardan.ci',   '+2250700000002'),
   ('33333333-3333-4333-8333-333333333333', 'Koné Ibrahim',     'commissaire',   null,     'commissaire@qardan.ci', null),
-  ('44444444-4444-4444-8444-444444444444', 'Sanogo Mamadou',   'direction',     null,     'direction@qardan.ci',   '+2250707302229'),
+  ('44444444-4444-4444-8444-444444444444', 'Mariam Cissé',   'direction',     null,     'direction@qardan.ci',   '+2250700000003'),
   ('55555555-5555-4555-8555-555555555555', 'Diallo Aminata',   'resp_programme','social', 'social@qardan.ci',      null);
 
 -- ── Bénéficiaires ────────────────────────────────────────────────────────────
