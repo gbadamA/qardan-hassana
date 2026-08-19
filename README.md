@@ -59,6 +59,14 @@ supabase/        ✅ migrations SQL + seed de développement
 2. ~~Remplacer `fileSubmissionStore`~~ → **fait** : le site écrit dans Supabase via des fonctions `security definer` (`apps/site/lib/store.ts`). Le stockage fichier ne sert plus que si Supabase n'est pas configuré, pour développer sans Docker.
 3. **Trancher les points ouverts** listés au §1 de `claudemap.md` (orthographe du nom, logo transparent, adresse du siège, numéro Mobile Money de l'ONG).
 
+## Déploiement
+
+Voir [`DEPLOIEMENT.md`](./DEPLOIEMENT.md) — Vercel (forfait gratuit) + Supabase, avec les
+deux verrous de compte à lever et la liste exacte des variables d'environnement.
+
+⚠️ Les coordonnées du bureau de l'ONG ne sont **pas** dans le dépôt : elles vivent dans
+`.env.local` (ignoré par git) et dans les variables du fournisseur. Modèle : `.env.example`.
+
 ## Conventions
 
 - **Aucun texte affichable en dur** : tout passe par un dictionnaire (`packages/shared/src/dictionaries/` pour le métier, `apps/site/content/<locale>/` pour les pages). Le français est la source de vérité typée — oublier une traduction arabe casse le typecheck.
