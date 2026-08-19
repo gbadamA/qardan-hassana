@@ -51,6 +51,24 @@ export default async function AboutPage(props: { params: Promise<{ locale: strin
 }
 
 async function AboutPageInner({ params }: { params: Promise<{ locale: string }> }) {
+  // ⚠️ TEMPORAIRE — sonde : un composant qui vaudrait `undefined` (export absent, résolution
+  // de module différente sous Linux) lèverait « Element type is invalid » au rendu, hors de
+  // portée du `try` ci-dessus. On vérifie donc leur existence ici, où elle est observable.
+  console.error(
+    "SONDE composants :",
+    JSON.stringify({
+      ScrollText: typeof ScrollText,
+      Building2: typeof Building2,
+      Phone: typeof Phone,
+      PageHero: typeof PageHero,
+      SectionHeading: typeof SectionHeading,
+      Icon: typeof Icon,
+      Link: typeof Link,
+      CONTACTS: Array.isArray(CONTACTS) ? CONTACTS.length : typeof CONTACTS,
+      PROGRAMS: Array.isArray(PROGRAMS) ? PROGRAMS.length : typeof PROGRAMS,
+    }),
+  );
+
   const { locale: raw } = await params;
   const locale: Locale = isLocale(raw) ? raw : "fr";
   const dict = getDictionary(locale);

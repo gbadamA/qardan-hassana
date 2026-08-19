@@ -56,8 +56,22 @@ export function SectionHeading({
   );
 }
 
+/** ⚠️ TEMPORAIRE — sonde de diagnostic autour d'un composant serveur. */
+export function PageHero(props: Parameters<typeof PageHeroInner>[0]) {
+  try {
+    return PageHeroInner(props);
+  } catch (error) {
+    const e = error as Error;
+    console.error("\n══════ ERREUR PageHero ══════");
+    console.error("message :", e?.message);
+    console.error("pile    :\n" + e?.stack);
+    console.error("═════════════════════════════\n");
+    return <section>diagnostic PageHero</section>;
+  }
+}
+
 /** En-tête de page intérieure — bandeau vert, trame, fil d'Ariane. */
-export function PageHero({
+function PageHeroInner({
   locale,
   homeLabel,
   breadcrumbLabel,
