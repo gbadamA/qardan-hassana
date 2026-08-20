@@ -58,8 +58,10 @@ body {
 }
 
 @layer components {
+  /* `active:translate-y-px` : l'enfoncement au clic confirme l'appui avant même que la
+     requête ne réponde — sur une connexion lente, c'est ce qui évite le double-clic. */
   .btn {
-    @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-[0.9rem] font-semibold transition-all duration-200 disabled:cursor-not-allowed disabled:opacity-55;
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-[0.9rem] font-semibold transition-all duration-200 active:translate-y-px disabled:cursor-not-allowed disabled:opacity-55 disabled:active:translate-y-0;
   }
   .btn-primary {
     @apply btn bg-primary text-white hover:bg-primary-hover;
@@ -81,6 +83,21 @@ body {
     @apply rounded-lg border border-light-border bg-light-surface shadow-card dark:border-dark-border dark:bg-dark-surface;
   }
 
+  /**
+   * Soulèvement au survol.
+   *
+   * Volontairement PLUS SOBRE que le `.lift` du site vitrine (-5px, ombre large) : ici on
+   * travaille à la journée, sur des écrans denses. Un mouvement de vitrine sous chaque
+   * carte deviendrait fatigant. 2 pixels suffisent à dire « cet élément répond ».
+   */
+  .lift {
+    @apply transition-[transform,box-shadow,border-color] duration-200 ease-out;
+  }
+  .lift:hover {
+    @apply -translate-y-0.5 border-leaf/40;
+    box-shadow: 0 12px 28px rgb(var(--c-primary) / 0.14);
+  }
+
   .field-label {
     @apply mb-1.5 block text-caption font-semibold text-light-text dark:text-dark-text;
   }
@@ -96,6 +113,40 @@ body {
 
   .table-cell {
     @apply border-b border-light-border px-4 py-3 text-[0.9rem] text-light-text dark:border-dark-border dark:text-dark-text;
+  }
+}
+
+/**
+ * Survol des lignes de tableau — posé sur l'élément, pas sur une classe.
+ *
+ * Le back-office compte une centaine de cellules réparties sur sept écrans : ajouter une
+ * classe à chaque `<tr>` aurait été un passage en revue fastidieux, et une ligne oubliée
+ * se serait vue. Une règle sur `tbody tr` couvre tout, aujourd'hui et demain.
+ *
+ * Sur des tableaux larges — dons, finances, bénéficiaires — c'est le repère qui évite de
+ * lire la valeur d'une ligne en croyant lire celle d'une autre.
+ */
+tbody tr {
+  transition: background-color 0.15s ease;
+}
+tbody tr:hover {
+  background-color: rgb(var(--c-leaf) / 0.06);
+}
+
+/**
+ * ⚠️ Respect de « réduire les animations » du système.
+ *
+ * Ce n'est pas une politesse : pour une personne sujette au mal des transports ou aux
+ * migraines vestibulaires, une page qui bouge sous le curseur provoque un vrai malaise.
+ * Les changements de COULEUR restent — ils informent sans déplacer quoi que ce soit.
+ */
+@media (prefers-reduced-motion: reduce) {
+  .lift,
+  .lift:hover,
+  .btn:active,
+  tbody tr {
+    transform: none;
+    transition: none;
   }
 }
 

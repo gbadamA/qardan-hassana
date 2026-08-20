@@ -50,7 +50,7 @@ export function StatCard({
   }[tone];
 
   return (
-    <div className="card p-5">
+    <div className="card lift p-5">
       <div className="flex items-start justify-between gap-3">
         <p className="text-caption font-semibold uppercase tracking-wider text-light-muted dark:text-dark-muted">
           {label}
