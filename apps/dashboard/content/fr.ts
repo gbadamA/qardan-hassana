@@ -41,6 +41,16 @@ export const dashFr = {
     menu: "Navigation du back-office",
     openMenu: "Ouvrir le menu",
     closeMenu: "Fermer le menu",
+    // Intitulés des groupes du menu — regroupement par domaine de l'ONG.
+    groupPilotage: "Pilotage",
+    groupFinances: "Ressources financières",
+    groupTerrain: "Action sociale",
+    groupInstitution: "Vie institutionnelle",
+    /** Annonce, aux lecteurs d'écran, ce que fait le bouton d'un groupe. */
+    expandGroup: "Déplier",
+    collapseGroup: "Replier",
+    /** Signale un groupe replié qui contient la page ouverte. */
+    containsCurrentPage: "contient la page courante",
   },
 
   common: {

@@ -38,6 +38,13 @@ export const dashAr: DashUi = {
     menu: "تنقل نظام الإدارة",
     openMenu: "فتح القائمة",
     closeMenu: "إغلاق القائمة",
+    groupPilotage: "القيادة",
+    groupFinances: "الموارد المالية",
+    groupTerrain: "العمل الاجتماعي",
+    groupInstitution: "الحياة المؤسسية",
+    expandGroup: "توسيع",
+    collapseGroup: "طي",
+    containsCurrentPage: "يحتوي على الصفحة الحالية",
   },
 
   common: {
