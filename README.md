@@ -28,6 +28,10 @@ pnpm typecheck
 `commissaire@qardan.ci` (lecture seule), `direction@qardan.ci`, `social@qardan.ci`
 (responsable de programme — ne voit que le Social).
 
+> ⚠️ Ces cinq comptes existent **aussi sur la base en ligne**, avec le même mot de passe et
+> à titre PROVISOIRE. Comme ce fichier est public, l'accès au back-office l'est de fait.
+> À faire tourner avant la première donnée réelle — procédure dans `DEPLOIEMENT.md`.
+
 > ⚠️ `pnpm install` prend une quinzaine de minutes sur ce poste. C'est normal, ne pas interrompre.
 
 ## Structure

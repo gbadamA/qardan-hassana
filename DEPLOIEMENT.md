@@ -44,8 +44,37 @@ appelant déjà `super_admin`.
 Reset password). Tous les autres comptes se créent ensuite depuis l'écran Administration
 du back-office, qui passe par l'Edge Function.
 
-⚠️ **Ne jamais exécuter `supabase/seed.sql` sur cette base** : c'est un jeu de
-développement, avec des mots de passe en clair.
+⚠️ **Ne jamais exécuter `supabase/seed.sql` en entier sur cette base** : il embarque un jeu
+de données de démonstration (bénéficiaires, dons, dépenses fictifs) qui n'a rien à faire
+dans une base réelle.
+
+### Les cinq comptes du README, recréés en ligne — ⚠️ provisoire
+
+Sur décision explicite de l'utilisateur (2026-08-20), les cinq comptes documentés dans le
+`README.md` existent aussi sur la base en ligne, **avec le même mot de passe `qardan1234`** :
+
+| Identifiant | Rôle | Périmètre |
+|---|---|---|
+| `pca@qardan.ci` | `super_admin` | tout |
+| `tresorier@qardan.ci` | `tresorier` | dons, finances |
+| `commissaire@qardan.ci` | `commissaire` | lecture seule, **pas** les bénéficiaires |
+| `direction@qardan.ci` | `direction` | pilotage |
+| `social@qardan.ci` | `resp_programme` | programme Social uniquement |
+
+Seuls les comptes ont été créés — ni bénéficiaires, ni dons, ni dépenses fictifs.
+
+> ⚠️ **Ce mot de passe est publié en clair dans un README hébergé sur un dépôt public.**
+> Tant qu'il est en place, toute personne lisant GitHub peut ouvrir le back-office. C'est
+> sans conséquence tant que la base ne contient que des données de test ; ça ne l'est plus
+> le jour où un vrai bénéficiaire y est saisi — le back-office donne accès aux coordonnées
+> des donateurs, aux finances et aux **dossiers médico-sociaux nominatifs**.
+>
+> ➜ **À faire avant la première donnée réelle.** Rotation en une requête SQL :
+> ```sql
+> update auth.users set encrypted_password = crypt('<nouveau-mot-de-passe>', gen_salt('bf'))
+> where email = 'pca@qardan.ci';
+> ```
+> …et retirer le mot de passe du `README.md`.
 
 ---
 

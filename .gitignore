@@ -20,3 +20,9 @@ supabase/.branches/
 # Caches Expo / outils
 .expo/
 .turbo/
+
+# ── Projets natifs générés par `expo prebuild` ─────────────────────────────
+# Reconstruits à la demande depuis app.json ; les versionner ferait diverger la
+# configuration native de sa source (le « workflow managé » d'Expo).
+apps/mobile/android/
+apps/mobile/ios/
