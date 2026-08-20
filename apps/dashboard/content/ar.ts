@@ -201,6 +201,11 @@ export const dashAr: DashUi = {
   },
 
   communication: {
+    notify: "إشعار",
+    notifyHint: "إرسال إشعار إلى مستخدمي التطبيق.",
+    notifySending: "جارٍ الإرسال…",
+    notifySent: "تم إرسال الإشعار",
+    notifyFailed: "تعذّر الإرسال. تحقّق من صلاحيتك وأعد المحاولة.",
     title: "الاتصال",
     lead: "الأخبار المنشورة هنا تظهر فورًا على الموقع العمومي.",
     add: "تحرير خبر",

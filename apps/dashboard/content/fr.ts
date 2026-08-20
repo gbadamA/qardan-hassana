@@ -208,6 +208,11 @@ export const dashFr = {
   },
 
   communication: {
+    notify: "Notifier",
+    notifyHint: "Envoyer une notification aux porteurs de l'application mobile.",
+    notifySending: "Envoi en cours…",
+    notifySent: "Notification envoyée",
+    notifyFailed: "Envoi impossible. Vérifiez votre rôle et réessayez.",
     title: "Communication",
     lead: "Les actualités publiées ici apparaissent immédiatement sur le site public.",
     add: "Rédiger une actualité",

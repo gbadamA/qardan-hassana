@@ -108,6 +108,13 @@ export const mobileFr = {
     light: "Clair",
     dark: "Sombre",
     offline: "Hors connexion — dernières données enregistrées.",
+    notifications: "Notifications",
+    notificationsHint:
+      "Être prévenu des nouvelles campagnes, des événements et de la validation de vos dons.",
+    pushRefused:
+      "Notifications refusées. Android ne repose plus la question : réactivez-les dans les réglages du téléphone.",
+    pushDeviceOnly: "Les notifications ne fonctionnent que sur un téléphone réel.",
+    pushUnavailable: "Notifications indisponibles dans cette version de l'application.",
   },
   common: {
     loading: "Chargement…",
@@ -219,6 +226,12 @@ export const mobileAr: MobileUi = {
     light: "فاتح",
     dark: "داكن",
     offline: "دون اتصال — آخر البيانات المحفوظة.",
+    notifications: "الإشعارات",
+    notificationsHint: "تلقّي إشعارات بالحملات الجديدة والفعاليات وتأكيد تبرعاتك.",
+    pushRefused:
+      "تم رفض الإشعارات. لا يعيد أندرويد طرح السؤال: فعّلها من إعدادات الهاتف.",
+    pushDeviceOnly: "لا تعمل الإشعارات إلا على هاتف حقيقي.",
+    pushUnavailable: "الإشعارات غير متاحة في هذه النسخة من التطبيق.",
   },
   common: {
     loading: "جارٍ التحميل…",

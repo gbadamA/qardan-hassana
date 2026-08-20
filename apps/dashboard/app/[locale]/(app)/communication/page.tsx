@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useParams } from "next/navigation";
-import { AlertTriangle, Eye, EyeOff, Plus } from "lucide-react";
+import { AlertTriangle, Bell, Eye, EyeOff, Plus } from "lucide-react";
 import {
   DEFAULT_LOCALE,
   PROGRAMS,
@@ -47,6 +47,8 @@ export default function CommunicationPage() {
   const dict = getDictionary(locale);
   const { can, profile } = useAuth();
   const [showForm, setShowForm] = useState(false);
+  /** Retour d'envoi par actualité — un message global ne dirait pas LAQUELLE est partie. */
+  const [pushEtat, setPushEtat] = useState<Record<string, string>>({});
 
   const news = useQuery<News[]>(
     async (sb) => sb.from("news").select("*").order("created_at", { ascending: false }),
@@ -72,6 +74,46 @@ export default function CommunicationPage() {
     });
 
     void news.reload();
+  }
+
+  /**
+   * Notifie les porteurs de l'application d'une actualité publiée.
+   *
+   * ⚠️ Passe par l'Edge Function `send-push`, jamais en direct : la liste des jetons
+   * d'appareils ne doit pas descendre dans un navigateur, et le rôle de l'appelant y est
+   * revérifié en base. Le bouton n'est qu'une commodité — la barrière est côté serveur.
+   */
+  async function notifier(item: News) {
+    setPushEtat((e) => ({ ...e, [item.id]: ui.communication.notifySending }));
+
+    const { data, error } = await getSupabase().functions.invoke("send-push", {
+      body: {
+        titleFr: item.title_fr,
+        bodyFr: item.excerpt_fr,
+        titleAr: item.title_ar ?? undefined,
+        bodyAr: item.excerpt_ar ?? undefined,
+        data: { route: "/actualites", slug: item.slug },
+      },
+    });
+
+    if (error) {
+      setPushEtat((e) => ({ ...e, [item.id]: ui.communication.notifyFailed }));
+      return;
+    }
+
+    const envoyes = (data as { envoyes?: number } | null)?.envoyes ?? 0;
+    setPushEtat((e) => ({
+      ...e,
+      [item.id]: `${ui.communication.notifySent} (${envoyes})`,
+    }));
+
+    await getSupabase().from("activity_log").insert({
+      actor_id: profile?.id ?? null,
+      action: "news.notify",
+      entity: "news",
+      entity_id: item.id,
+      details: { slug: item.slug, envoyes },
+    });
   }
 
   return (
@@ -181,6 +223,26 @@ export default function CommunicationPage() {
                         )}
                       </button>
                     )}
+
+                    {/* Notifier n'a de sens que sur une actualité DÉJÀ publiée : prévenir
+                        d'un brouillon enverrait les gens vers une page inexistante. */}
+                    {can.writeOps && n.status === "publie" && (
+                      <button
+                        type="button"
+                        onClick={() => void notifier(n)}
+                        className="btn-ghost btn-sm ms-2"
+                        title={ui.communication.notifyHint}
+                      >
+                        <Bell className="h-3.5 w-3.5" />
+                        {ui.communication.notify}
+                      </button>
+                    )}
+
+                    {pushEtat[n.id] ? (
+                      <p className="mt-1 text-caption text-light-muted dark:text-dark-muted">
+                        {pushEtat[n.id]}
+                      </p>
+                    ) : null}
                   </td>
                 </tr>
               ))}

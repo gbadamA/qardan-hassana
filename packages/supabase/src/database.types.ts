@@ -521,6 +521,32 @@ export type Database = {
         Update: Partial<{ details: Json }>;
         Relationships: [];
       };
+
+      /**
+       * Jetons de notification Expo — un appareil, une ligne.
+       *
+       * ⚠️ Aucune écriture directe depuis un client : l'enregistrement passe par les
+       * fonctions `register_push_token` / `unregister_push_token`. Un client ne doit
+       * pas pouvoir choisir l'`owner_id` qu'il déclare.
+       */
+      push_tokens: {
+        Row: {
+          token: string;
+          locale: string;
+          platform: string;
+          owner_id: string | null;
+          created_at: string;
+          last_seen_at: string;
+        };
+        Insert: {
+          token: string;
+          locale?: string;
+          platform?: string;
+          owner_id?: string | null;
+        };
+        Update: Partial<{ locale: string; platform: string; last_seen_at: string }>;
+        Relationships: [];
+      };
     };
 
     Views: { [_ in never]: never };
@@ -588,6 +614,28 @@ export type Database = {
           p_wants_membership: boolean;
         };
         Returns: string;
+      };
+
+      /**
+       * Rattache un don antérieur à la création du compte de son auteur.
+       * ⚠️ Exige la référence ET le numéro de téléphone : la référence seule est
+       * séquentielle, donc devinable.
+       */
+      claim_donation: {
+        Args: { p_reference: string; p_phone: string };
+        Returns: string;
+      };
+
+      /** Enregistre ou rafraîchit le jeton de notification de cet appareil. */
+      register_push_token: {
+        Args: { p_token: string; p_locale?: string; p_platform?: string };
+        Returns: void;
+      };
+
+      /** Efface le jeton — désactiver, c'est retirer la trace, pas cesser d'émettre. */
+      unregister_push_token: {
+        Args: { p_token: string };
+        Returns: void;
       };
     };
 
