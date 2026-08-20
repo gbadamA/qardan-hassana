@@ -31,7 +31,12 @@
     },
     "extra": {
       "supabaseUrl": "https://pbrqenzixxvpwukyextk.supabase.co",
-      "supabaseAnonKey": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBicnFlbnppeHh2cHd1a3lleHRrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODcxMzQ5MjksImV4cCI6MjEwMjcxMDkyOX0.qnHJeWpAsX2ijVs3RxifKVaoOV7jQTWE42hql_7V5bs"
-    }
+      "supabaseAnonKey": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBicnFlbnppeHh2cHd1a3lleHRrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODcxMzQ5MjksImV4cCI6MjEwMjcxMDkyOX0.qnHJeWpAsX2ijVs3RxifKVaoOV7jQTWE42hql_7V5bs",
+      "router": {},
+      "eas": {
+        "projectId": "9f2ca585-fcd7-41c7-a4ef-a1fbd7ad0347"
+      }
+    },
+    "owner": "gbadamutiyu"
   }
 }
