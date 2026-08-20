@@ -6,7 +6,6 @@
     "orientation": "portrait",
     "scheme": "qardan",
     "userInterfaceStyle": "automatic",
-    "newArchEnabled": true,
     "splash": {
       "backgroundColor": "#0F5C2E",
       "resizeMode": "contain"
@@ -22,8 +21,7 @@
       "package": "ci.qardanhassana.app",
       "adaptiveIcon": {
         "backgroundColor": "#0F5C2E"
-      },
-      "edgeToEdgeEnabled": true
+      }
     },
     "plugins": [
       "expo-router"
@@ -32,8 +30,8 @@
       "typedRoutes": false
     },
     "extra": {
-      "supabaseUrl": "http://10.0.2.2:54141",
-      "supabaseAnonKey": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0"
+      "supabaseUrl": "https://pbrqenzixxvpwukyextk.supabase.co",
+      "supabaseAnonKey": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBicnFlbnppeHh2cHd1a3lleHRrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODcxMzQ5MjksImV4cCI6MjEwMjcxMDkyOX0.qnHJeWpAsX2ijVs3RxifKVaoOV7jQTWE42hql_7V5bs"
     }
   }
 }

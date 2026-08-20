@@ -12,11 +12,18 @@ import type { Database } from "@qardan/supabase";
  * (ou des variables `EXPO_PUBLIC_*`) et la session est persistée dans AsyncStorage.
  * Les TYPES, eux, sont bien partagés — c'est ce qui compte.
  *
- * ⚠️ **L'adresse de développement dépend de l'appareil** :
- *   • émulateur Android → `http://10.0.2.2:54141` (alias stable vers l'hôte)
- *   • téléphone réel via Expo Go → l'IP Wi-Fi du poste, qui CHANGE au redémarrage
- * D'où le passage par `extra`, modifiable sans toucher au code. Après changement,
- * relancer Expo : les valeurs sont figées dans le bundle.
+ * `app.json > extra` pointe désormais sur le projet Supabase **en ligne**, et non plus sur
+ * une base locale. C'est ce qui rend l'app utilisable telle quelle sur un vrai téléphone :
+ * `http://10.0.2.2:54141` n'a de sens que depuis un émulateur Android, et l'IP Wi-Fi du
+ * poste change à chaque redémarrage du routeur.
+ *
+ * La clé présente dans `app.json` est la clé **anon**, publiable par conception — elle part
+ * dans le bundle de chaque installation, c'est la RLS qui protège les données. La clé
+ * `service_role`, elle, n'a rien à faire ici ni nulle part dans ce dépôt, qui est public.
+ *
+ * ⚠️ Pour viser une AUTRE base (locale, préproduction) sans toucher au code : poser
+ * `EXPO_PUBLIC_SUPABASE_URL` / `EXPO_PUBLIC_SUPABASE_ANON_KEY`, qui priment sur `extra`.
+ * Après changement, relancer Expo : les valeurs sont figées dans le bundle au démarrage.
  */
 
 const extra = (Constants.expoConfig?.extra ?? {}) as {
