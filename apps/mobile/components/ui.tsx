@@ -20,14 +20,27 @@ export function GradientHeader({
   title,
   subtitle,
   children,
+  color,
 }: {
   title: string;
   subtitle?: string;
   children?: React.ReactNode;
+  /**
+   * Couleur de programme. Le dégradé part alors du vert profond de l'ONG vers cette
+   * teinte : l'écran s'identifie d'un coup d'œil sans cesser d'appartenir à la marque.
+   * Omise, on garde le dégradé émeraude commun à toute l'application.
+   */
+  color?: string;
 }) {
+  // `gradient.emerald` est un tuple `as const` de trois couleurs : on garde ses deux
+  // extrémités, ou on remplace la dernière par la teinte du programme.
+  const colors: [string, string, ...string[]] = color
+    ? [gradient.emerald[0], color]
+    : [...gradient.emerald];
+
   return (
     <LinearGradient
-      colors={[...gradient.emerald]}
+      colors={colors}
       start={{ x: 0, y: 0 }}
       end={{ x: 1, y: 1 }}
       style={{ paddingHorizontal: 20, paddingTop: 56, paddingBottom: 24 }}
@@ -136,3 +149,72 @@ export function Notice({ text, tone = "info" }: { text: string; tone?: "info" | 
     </View>
   );
 }
+
+/**
+ * Briques de formulaire, communes au don et à la candidature bénévole.
+ *
+ * Elles vivaient dans `don.tsx`. Les remonter ici évite de dupliquer un style de champ
+ * qui aurait divergé au premier ajustement — un formulaire dont les bordures ne
+ * ressemblent pas à celles d'à côté se remarque tout de suite.
+ */
+
+/** Option cliquable : sélection unique (programme) ou multiple (disponibilités). */
+export function Choice({
+  label,
+  hint,
+  active,
+  color,
+  onPress,
+}: {
+  label: string;
+  hint?: string;
+  active: boolean;
+  color?: string;
+  onPress: () => void;
+}) {
+  const accent = color ?? brand.leaf;
+  return (
+    <Pressable
+      onPress={onPress}
+      accessibilityRole="button"
+      accessibilityState={{ selected: active }}
+      style={{
+        borderRadius: 12,
+        borderWidth: 1,
+        borderColor: active ? accent : palette.light.border,
+        backgroundColor: active ? `${accent}12` : palette.light.surface,
+        padding: 12,
+      }}
+    >
+      <Text style={{ fontSize: 14, fontWeight: "600", color: palette.light.text }}>{label}</Text>
+      {hint ? (
+        <Text style={{ fontSize: 12, color: palette.light.textMuted, marginTop: 2 }}>{hint}</Text>
+      ) : null}
+    </Pressable>
+  );
+}
+
+export const formStyles = {
+  label: {
+    fontSize: 13,
+    fontWeight: "700" as const,
+    color: palette.light.text,
+    marginBottom: 8,
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: palette.light.border,
+    borderRadius: 12,
+    paddingHorizontal: 14,
+    paddingVertical: 12,
+    fontSize: 15,
+    color: palette.light.text,
+    backgroundColor: palette.light.surface,
+  },
+  error: {
+    color: brand.danger,
+    fontSize: 12,
+    marginTop: 6,
+    fontWeight: "600" as const,
+  },
+};

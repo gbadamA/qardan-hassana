@@ -1,5 +1,5 @@
 import { Linking, Pressable, ScrollView, Text, View } from "react-native";
-import { Link } from "expo-router";
+import { Link, useRouter } from "expo-router";
 import { CONTACTS, ORG, PROGRAMS, formatDate } from "@qardan/shared";
 import { brand, palette } from "@qardan/design-tokens";
 import { useLocale } from "@/lib/locale";
@@ -21,6 +21,8 @@ type NewsRow = {
 export default function HomeScreen() {
   const { locale, dict, ui } = useLocale();
   const pca = CONTACTS[0];
+
+  const router = useRouter();
 
   const news = useCachedQuery<NewsRow[]>(
     "news.published",
@@ -147,9 +149,19 @@ export default function HomeScreen() {
           </View>
         </View>
 
+        {/* Rejoindre l'ONG — donner de son temps plutôt que de son argent, c'est un
+            engagement d'une autre nature : il mérite sa place sur l'accueil, pas d'être
+            enterré dans un sous-écran. */}
+        <View style={{ paddingHorizontal: 20, paddingTop: 28 }}>
+          <PrimaryButton
+            label={ui.volunteer.cta}
+            onPress={() => router.push("/benevole")}
+          />
+        </View>
+
         {/* Contact direct — dans un quartier, on appelle, on n'écrit pas. */}
         {pca ? (
-          <View style={{ paddingHorizontal: 20, paddingTop: 28 }}>
+          <View style={{ paddingHorizontal: 20, paddingTop: 12 }}>
             <PrimaryButton
               label={`${ui.home.callUs} — ${pca.phoneDisplay}`}
               onPress={() => void Linking.openURL(`tel:${pca.phone}`)}

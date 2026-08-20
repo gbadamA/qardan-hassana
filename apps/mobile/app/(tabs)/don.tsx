@@ -17,7 +17,15 @@ import {
 import { brand, palette } from "@qardan/design-tokens";
 import { useLocale } from "@/lib/locale";
 import { getSupabase, isConfigured } from "@/lib/supabase";
-import { Card, GradientHeader, Notice, PrimaryButton, Screen } from "@/components/ui";
+import {
+  Card,
+  Choice,
+  GradientHeader,
+  Notice,
+  PrimaryButton,
+  Screen,
+  formStyles as styles,
+} from "@/components/ui";
 
 /**
  * Don depuis le mobile.
@@ -297,61 +305,3 @@ export default function DonateScreen() {
     </Screen>
   );
 }
-
-function Choice({
-  label,
-  hint,
-  active,
-  color,
-  onPress,
-}: {
-  label: string;
-  hint?: string;
-  active: boolean;
-  color?: string;
-  onPress: () => void;
-}) {
-  const accent = color ?? brand.leaf;
-  return (
-    <Pressable
-      onPress={onPress}
-      style={{
-        borderRadius: 12,
-        borderWidth: 1,
-        borderColor: active ? accent : palette.light.border,
-        backgroundColor: active ? `${accent}12` : palette.light.surface,
-        padding: 12,
-      }}
-    >
-      <Text style={{ fontSize: 14, fontWeight: "600", color: palette.light.text }}>{label}</Text>
-      {hint ? (
-        <Text style={{ fontSize: 12, color: palette.light.textMuted, marginTop: 2 }}>{hint}</Text>
-      ) : null}
-    </Pressable>
-  );
-}
-
-const styles = {
-  label: {
-    fontSize: 13,
-    fontWeight: "700" as const,
-    color: palette.light.text,
-    marginBottom: 8,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: palette.light.border,
-    borderRadius: 12,
-    paddingHorizontal: 14,
-    paddingVertical: 12,
-    fontSize: 15,
-    color: palette.light.text,
-    backgroundColor: palette.light.surface,
-  },
-  error: {
-    color: brand.danger,
-    fontSize: 12,
-    marginTop: 6,
-    fontWeight: "600" as const,
-  },
-};

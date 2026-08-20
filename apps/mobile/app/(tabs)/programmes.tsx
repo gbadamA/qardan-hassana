@@ -1,4 +1,4 @@
-import { ScrollView, Text, View } from "react-native";
+import { Pressable, ScrollView, Text, View } from "react-native";
 import { useRouter } from "expo-router";
 import { PROGRAMS } from "@qardan/shared";
 import { palette } from "@qardan/design-tokens";
@@ -18,7 +18,13 @@ export default function ProgramsScreen() {
           {PROGRAMS.map((p) => {
             const labels = dict.programs[p.slug];
             return (
-              <Card key={p.slug} style={{ borderStartWidth: 4, borderStartColor: p.color }}>
+              <Pressable
+                key={p.slug}
+                onPress={() => router.push({ pathname: "/programme/[slug]", params: { slug: p.slug } })}
+                accessibilityRole="button"
+                accessibilityHint={ui.programs.openDetail}
+              >
+                <Card style={{ borderStartWidth: 4, borderStartColor: p.color }}>
                 <Text style={{ fontSize: 17, fontWeight: "800", color: palette.light.text }}>
                   {labels.fullName}
                 </Text>
@@ -59,14 +65,20 @@ export default function ProgramsScreen() {
                   ))}
                 </View>
 
-                <View style={{ marginTop: 16 }}>
+                <View style={{ marginTop: 16, gap: 8 }}>
                   <PrimaryButton
                     label={ui.programs.support}
                     tone="accent"
                     onPress={() => router.push({ pathname: "/(tabs)/don", params: { programme: p.slug } })}
                   />
+                  <Text
+                    style={{ fontSize: 12, color: p.color, fontWeight: "700", textAlign: "center" }}
+                  >
+                    {ui.programs.openDetail}
+                  </Text>
                 </View>
-              </Card>
+                </Card>
+              </Pressable>
             );
           })}
         </View>
