@@ -32,3 +32,6 @@ apps/mobile/ios/
 # les détient peut publier une mise à jour se faisant passer pour l'application.
 apps/mobile/credentials/
 apps/mobile/credentials.json
+
+# APK/AAB récupérés depuis EAS — des binaires de 100 Mo n'ont rien à faire dans l'historique.
+apps/mobile/dist-apk/
