@@ -15,6 +15,7 @@ export const mobileFr = {
     programs: "Programmes",
     news: "Actualités",
     donate: "Donner",
+    contact: "Contact",
   },
   home: {
     greeting: "Pour la bonne cause",
@@ -61,6 +62,18 @@ export const mobileFr = {
     keepRef: "Conservez cette référence : elle permet au Trésorier de retrouver votre versement.",
     again: "Faire un autre don",
     impact: "Concrètement",
+  },
+  contact: {
+    title: "Nous contacter",
+    lead: "Chaque responsable a son domaine : appelez celui qui traite votre question.",
+    call: "Appeler",
+    whatsapp: "WhatsApp",
+    whereTitle: "Où nous trouver",
+    addressPending: "L'adresse exacte du siège est en cours de confirmation. Appelez-nous pour être guidé.",
+    openMap: "Ouvrir dans les cartes",
+    writeTitle: "Nous écrire",
+    sendEmail: "Envoyer un email",
+    notConfigured: "Les coordonnées du bureau ne sont pas encore renseignées dans cette version de l'application.",
   },
   volunteer: {
     cta: "Devenir bénévole",
@@ -109,6 +122,7 @@ export type MobileUi = typeof mobileFr;
 
 export const mobileAr: MobileUi = {
   tabs: {
+    contact: "اتصل بنا",
     home: "الرئيسية",
     programs: "البرامج",
     news: "الأخبار",
@@ -159,6 +173,18 @@ export const mobileAr: MobileUi = {
     keepRef: "احتفظ بهذا المرجع: به يعثر أمين المال على دفعتك.",
     again: "تبرّع مرة أخرى",
     impact: "بشكل ملموس",
+  },
+  contact: {
+    title: "اتصل بنا",
+    lead: "لكل مسؤول مجاله: اتصل بمن يعنيه سؤالك.",
+    call: "اتصال",
+    whatsapp: "واتساب",
+    whereTitle: "أين تجدنا",
+    addressPending: "العنوان الدقيق للمقر قيد التأكيد. اتصل بنا لإرشادك.",
+    openMap: "فتح في الخرائط",
+    writeTitle: "راسلنا",
+    sendEmail: "إرسال بريد إلكتروني",
+    notConfigured: "لم تُسجَّل بيانات المكتب بعد في هذه النسخة من التطبيق.",
   },
   volunteer: {
     cta: "كن متطوعاً",

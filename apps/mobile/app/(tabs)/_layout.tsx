@@ -65,6 +65,13 @@ export default function TabsLayout() {
           tabBarIcon: ({ focused }) => <TabIcon glyph="💚" focused={focused} />,
         }}
       />
+      <Tabs.Screen
+        name="contact"
+        options={{
+          title: ui.tabs.contact,
+          tabBarIcon: ({ focused }) => <TabIcon glyph="📞" focused={focused} />,
+        }}
+      />
     </Tabs>
   );
 }
