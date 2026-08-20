@@ -617,13 +617,23 @@ export type Database = {
       };
 
       /**
-       * Rattache un don antérieur à la création du compte de son auteur.
-       * ⚠️ Exige la référence ET le numéro de téléphone : la référence seule est
-       * séquentielle, donc devinable.
+       * Suivi d'un don par son porteur, SANS authentification.
+       *
+       * ⚠️ Exige la référence ET le numéro saisi lors du don : la référence seule est
+       * séquentielle, donc devinable. Ne renvoie que de quoi se repérer et éditer un
+       * reçu — ni nom, ni message, ni téléphone.
        */
-      claim_donation: {
+      donation_status: {
         Args: { p_reference: string; p_phone: string };
-        Returns: string;
+        Returns: {
+          reference: string;
+          amount_fcfa: number;
+          program: ProgramSlugDb | null;
+          method: PaymentMethodDb;
+          status: DonationStatus;
+          created_at: string;
+          validated_at: string | null;
+        }[];
       };
 
       /** Enregistre ou rafraîchit le jeton de notification de cet appareil. */

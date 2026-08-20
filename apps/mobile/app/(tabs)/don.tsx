@@ -17,6 +17,7 @@ import {
 import { brand, palette } from "@qardan/design-tokens";
 import { useLocale } from "@/lib/locale";
 import { getSupabase, isConfigured } from "@/lib/supabase";
+import { ajouterDon } from "@/lib/mes-dons";
 import {
   Card,
   Choice,
@@ -114,7 +115,20 @@ export default function DonateScreen() {
       setGlobalError(error.message);
       return;
     }
-    setReference(String(data));
+    const ref = String(data);
+
+    // L'appareil retient le don : c'est tout l'historique de « Mes dons », puisqu'il
+    // n'y a pas de compte. Le statut, lui, sera relu au serveur à chaque ouverture.
+    await ajouterDon({
+      reference: ref,
+      phone: parsed.data.donorPhone,
+      amount: parsed.data.amount,
+      program: parsed.data.program,
+      method: parsed.data.method,
+      createdAt: new Date().toISOString(),
+    });
+
+    setReference(ref);
   }
 
   if (reference) {

@@ -152,7 +152,11 @@ export default function HomeScreen() {
         {/* Rejoindre l'ONG — donner de son temps plutôt que de son argent, c'est un
             engagement d'une autre nature : il mérite sa place sur l'accueil, pas d'être
             enterré dans un sous-écran. */}
-        <View style={{ paddingHorizontal: 20, paddingTop: 28 }}>
+        <View style={{ paddingHorizontal: 20, paddingTop: 28, gap: 12 }}>
+          <PrimaryButton
+            label={ui.myDonations.title}
+            onPress={() => router.push("/mes-dons")}
+          />
           <PrimaryButton
             label={ui.volunteer.cta}
             onPress={() => router.push("/benevole")}
