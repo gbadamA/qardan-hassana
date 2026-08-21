@@ -5,6 +5,7 @@ import { palette } from "@qardan/design-tokens";
 import { useLocale } from "@/lib/locale";
 import { useCachedQuery } from "@/lib/cache";
 import { Card, GradientHeader, Loading, Notice, PrimaryButton, Screen, useContentPadding } from "@/components/ui";
+import { CampaignCard, type Campagne } from "@/components/campagne";
 
 type NewsRow = {
   id: string;
@@ -51,6 +52,14 @@ export default function ProgramDetailScreen() {
         .eq("program", slug as ProgramSlug)
         .order("published_at", { ascending: false })
         .limit(10),
+    [slug],
+  );
+
+  // Collectes de CE programme. Passe par la fonction publique : la table `donations`
+  // est illisible pour un client anonyme, et doit le rester.
+  const campagnes = useCachedQuery<Campagne[]>(
+    `campagnes.${slug ?? "aucun"}`,
+    async (sb) => sb.rpc("public_campaigns", { p_program: slug as ProgramSlug }),
     [slug],
   );
 
@@ -109,6 +118,46 @@ export default function ProgramDetailScreen() {
               ))}
             </View>
           </Card>
+
+          {/* Collectes en cours — le suivi des dons, à l'endroit où l'on décide de donner */}
+          <View>
+            <Text style={{ fontSize: 15, fontWeight: "800", color: palette.light.text }}>
+              {ui.campaigns.title}
+            </Text>
+
+            {campagnes.loading && !campagnes.data ? <Loading label={ui.common.loading} /> : null}
+
+            {!campagnes.loading && (campagnes.data?.length ?? 0) === 0 ? (
+              <Text
+                style={{
+                  fontSize: 13,
+                  color: palette.light.textMuted,
+                  marginTop: 10,
+                  lineHeight: 20,
+                }}
+              >
+                {ui.campaigns.none}
+              </Text>
+            ) : null}
+
+            <View style={{ marginTop: 12, gap: 12 }}>
+              {(campagnes.data ?? []).map((c) => (
+                <CampaignCard
+                  key={c.id}
+                  campagne={c}
+                  locale={locale}
+                  ui={ui}
+                  color={program.color}
+                  onSupport={() =>
+                    router.push({
+                      pathname: "/(tabs)/don",
+                      params: { programme: slug, campagne: c.id },
+                    })
+                  }
+                />
+              ))}
+            </View>
+          </View>
 
           {/* Actualités de CE programme */}
           <View>

@@ -63,6 +63,23 @@ export const mobileFr = {
     again: "Faire un autre don",
     impact: "Concrètement",
   },
+  campaigns: {
+    /** Titre du bloc sur le détail d'un programme. */
+    title: "Collectes en cours",
+    none: "Aucune collecte en cours sur ce programme.",
+    of: "de",
+    donors: "participants",
+    daysLeft: "jours restants",
+    remaining: "Plus que",
+    goalReached: "Objectif atteint — merci.",
+    closed: "Collecte clôturée.",
+    support: "Soutenir cette collecte",
+    /** Rappel, sur le formulaire, de la collecte que l'on soutient. */
+    supporting: "Vous soutenez",
+    hideAmount: "Ne pas afficher le montant publiquement",
+    hideAmountHint:
+      "Votre nom restera dans la liste des participants, mais la somme n'y figurera pas.",
+  },
   myDonations: {
     title: "Mes dons",
     lead: "Le suivi des dons faits depuis ce téléphone.",
@@ -208,6 +225,20 @@ export const mobileAr: MobileUi = {
     keepRef: "احتفظ بهذا المرجع: به يعثر أمين المال على دفعتك.",
     again: "تبرّع مرة أخرى",
     impact: "بشكل ملموس",
+  },
+  campaigns: {
+    title: "حملات جارية",
+    none: "لا توجد حملة جارية في هذا البرنامج.",
+    of: "من",
+    donors: "مشاركًا",
+    daysLeft: "يومًا متبقيًا",
+    remaining: "بقي",
+    goalReached: "تم بلوغ الهدف — شكرًا لكم.",
+    closed: "أُغلقت الحملة.",
+    support: "دعم هذه الحملة",
+    supporting: "أنت تدعم",
+    hideAmount: "عدم إظهار المبلغ للعموم",
+    hideAmountHint: "يبقى اسمك في قائمة المشاركين، دون أن يظهر المبلغ.",
   },
   myDonations: {
     title: "تبرعاتي",

@@ -5,6 +5,7 @@ import { brand, palette } from "@qardan/design-tokens";
 import { useLocale } from "@/lib/locale";
 import { useCachedQuery } from "@/lib/cache";
 import { Card, GradientHeader, Loading, Notice, Pill, PrimaryButton, Screen } from "@/components/ui";
+import { CampaignCard, type Campagne } from "@/components/campagne";
 
 type NewsRow = {
   id: string;
@@ -36,6 +37,16 @@ export default function HomeScreen() {
     [],
   );
 
+  // Collectes de TOUS les programmes : sans argument, la fonction publique les rend
+  // toutes. C'est l'écran d'accueil — on y montre ce qui se joue en ce moment.
+  const campagnes = useCachedQuery<Campagne[]>(
+    "campagnes.toutes",
+    async (sb) => sb.rpc("public_campaigns", {}),
+    [],
+  );
+
+  const enCours = (campagnes.data ?? []).filter((c) => !c.closed).slice(0, 2);
+
   return (
     <Screen>
       <ScrollView contentContainerStyle={{ paddingBottom: 32 }}>
@@ -62,6 +73,33 @@ export default function HomeScreen() {
         </GradientHeader>
 
         {news.stale ? <Notice text={ui.settings.offline} tone="warning" /> : null}
+
+        {/* Collectes en cours — rien ne s'affiche s'il n'y en a aucune : une rubrique
+            vide sur l'accueil donne l'impression d'une application inachevée. */}
+        {enCours.length > 0 ? (
+          <View style={{ paddingHorizontal: 20, paddingTop: 24 }}>
+            <Text style={{ fontSize: 18, fontWeight: "800", color: palette.light.text }}>
+              {ui.campaigns.title}
+            </Text>
+            <View style={{ gap: 12, marginTop: 12 }}>
+              {enCours.map((c) => (
+                <CampaignCard
+                  key={c.id}
+                  campagne={c}
+                  locale={locale}
+                  ui={ui}
+                  color={PROGRAMS.find((p) => p.slug === c.program)?.color}
+                  onSupport={() =>
+                    router.push({
+                      pathname: "/(tabs)/don",
+                      params: { programme: c.program ?? undefined, campagne: c.id },
+                    })
+                  }
+                />
+              ))}
+            </View>
+          </View>
+        ) : null}
 
         {/* Programmes */}
         <View style={{ paddingHorizontal: 20, paddingTop: 24 }}>

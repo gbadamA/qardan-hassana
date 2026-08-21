@@ -17,7 +17,9 @@ import {
 import { brand, palette } from "@qardan/design-tokens";
 import { useLocale } from "@/lib/locale";
 import { getSupabase, isConfigured } from "@/lib/supabase";
+import { useCachedQuery } from "@/lib/cache";
 import { ajouterDon } from "@/lib/mes-dons";
+import { type Campagne } from "@/components/campagne";
 import {
   Card,
   Choice,
@@ -41,10 +43,13 @@ import {
  */
 export default function DonateScreen() {
   const { locale, dict, ui } = useLocale();
-  const params = useLocalSearchParams<{ programme?: string }>();
+  const params = useLocalSearchParams<{ programme?: string; campagne?: string }>();
 
   const preselected =
     params.programme && isProgramSlug(params.programme) ? params.programme : null;
+
+  // Collecte visée, arrivée du détail de programme. `null` = don au programme en général.
+  const campagneId = params.campagne ?? null;
 
   const [amount, setAmount] = useState<number>(5000);
   const [customAmount, setCustomAmount] = useState("");
@@ -53,6 +58,7 @@ export default function DonateScreen() {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [anonymous, setAnonymous] = useState(false);
+  const [hideAmount, setHideAmount] = useState(false);
 
   const [busy, setBusy] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -60,6 +66,18 @@ export default function DonateScreen() {
   const [reference, setReference] = useState<string | null>(null);
 
   const effectiveAmount = customAmount ? Number(customAmount) || 0 : amount;
+
+  // Le nom de la collecte, uniquement pour le rappel affiché : on ne fait pas confiance
+  // à un identifiant venu de la barre d'adresse, c'est la base qui revérifie qu'il
+  // désigne bien une collecte publiée et ouverte.
+  const campagne = useCachedQuery<Campagne[]>(
+    `campagne.une.${campagneId ?? "aucune"}`,
+    async (sb) => sb.rpc("public_campaigns", { p_program: preselected }),
+    [campagneId, preselected],
+  );
+  const campagneVisee = campagneId
+    ? (campagne.data ?? []).find((c) => c.id === campagneId) ?? null
+    : null;
 
   async function submit() {
     setGlobalError(null);
@@ -107,6 +125,8 @@ export default function DonateScreen() {
       p_donor_email: null,
       p_anonymous: parsed.data.anonymous,
       p_message: null,
+      p_campaign: campagneId,
+      p_visibility: hideAmount ? "prive" : "public",
     });
 
     setBusy(false);
@@ -175,6 +195,16 @@ export default function DonateScreen() {
     <Screen>
       <ScrollView contentContainerStyle={{ paddingBottom: 40 }} keyboardShouldPersistTaps="handled">
         <GradientHeader title={ui.donate.title} subtitle={ui.donate.lead} />
+
+        {campagneVisee ? (
+          <Notice
+            text={`${ui.campaigns.supporting} : ${
+              locale === "ar" && campagneVisee.title_ar
+                ? campagneVisee.title_ar
+                : campagneVisee.title_fr
+            }`}
+          />
+        ) : null}
 
         <View style={{ padding: 20, gap: 20 }}>
           {/* Montant */}
@@ -300,6 +330,33 @@ export default function DonateScreen() {
               />
               <Text style={{ fontSize: 14, color: palette.light.text }}>{ui.donate.anonymous}</Text>
             </View>
+
+            {/* Masquer le montant n'a de sens que dans une collecte : c'est la seule
+                liste publique où il apparaîtrait. */}
+            {campagneId ? (
+              <View>
+                <View style={{ flexDirection: "row", alignItems: "center", gap: 12 }}>
+                  <Switch
+                    value={hideAmount}
+                    onValueChange={setHideAmount}
+                    trackColor={{ true: brand.leaf, false: palette.light.border }}
+                  />
+                  <Text style={{ flex: 1, fontSize: 14, color: palette.light.text }}>
+                    {ui.campaigns.hideAmount}
+                  </Text>
+                </View>
+                <Text
+                  style={{
+                    fontSize: 12,
+                    color: palette.light.textMuted,
+                    marginTop: 6,
+                    lineHeight: 18,
+                  }}
+                >
+                  {ui.campaigns.hideAmountHint}
+                </Text>
+              </View>
+            ) : null}
           </View>
 
           {globalError ? <Text style={styles.error}>{globalError}</Text> : null}

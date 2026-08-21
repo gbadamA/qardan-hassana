@@ -4,10 +4,12 @@
     "slug": "qardan-hassana",
     "version": "0.1.0",
     "orientation": "portrait",
+    "icon": "./assets/icon.png",
     "scheme": "qardan",
     "userInterfaceStyle": "automatic",
     "splash": {
-      "backgroundColor": "#0F5C2E",
+      "image": "./assets/icon.png",
+      "backgroundColor": "#FFFFFF",
       "resizeMode": "contain"
     },
     "assetBundlePatterns": [
@@ -20,13 +22,17 @@
     "android": {
       "package": "ci.qardanhassana.app",
       "adaptiveIcon": {
-        "backgroundColor": "#0F5C2E"
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#FFFFFF"
       }
     },
     "plugins": [
       "expo-router",
       "expo-sharing"
     ],
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
     "experiments": {
       "typedRoutes": false
     },
