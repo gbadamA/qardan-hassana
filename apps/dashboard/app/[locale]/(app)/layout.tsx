@@ -16,6 +16,7 @@ import {
   Megaphone,
   Menu,
   Settings,
+  Target,
   Users,
   Wallet,
   X,
@@ -129,6 +130,14 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       icon: Wallet,
       items: [
         { href: "/dons", label: ui.nav.donations, icon: HeartHandshake, roles: null },
+        {
+          href: "/campagnes",
+          label: ui.nav.campaigns,
+          icon: Target,
+          // Le Trésorier et le Commissaire y accèdent en lecture : la progression d'une
+          // collecte est une donnée financière, pas une donnée de communication.
+          roles: ["super_admin", "direction", "administratif", "tresorier", "commissaire"],
+        },
         { href: "/finances", label: ui.nav.finance, icon: BarChart3, roles: null },
       ],
     },

@@ -34,6 +34,8 @@ export type PaymentMethodDb =
   | "virement";
 
 export type DonationStatus = "en_attente" | "valide" | "rejete";
+/** Choix du donateur : son montant et son message s'affichent-ils sur la page de campagne ? */
+export type DonationVisibility = "public" | "prive";
 export type BeneficiaryStatus = "actif" | "suivi_termine" | "suspendu";
 export type ActivityStatus = "planifie" | "en_cours" | "termine" | "annule";
 export type PublicationStatus = "brouillon" | "publie" | "archive";
@@ -164,11 +166,17 @@ export type Database = {
           starts_on: string;
           ends_on: string | null;
           status: PublicationStatus;
+          description_fr: string | null;
+          description_ar: string | null;
+          image_url: string | null;
         };
         Insert: {
           id?: string;
           title_fr: string;
           title_ar?: string | null;
+          description_fr?: string | null;
+          description_ar?: string | null;
+          image_url?: string | null;
           program?: ProgramSlugDb | null;
           goal_fcfa: number;
           starts_on?: string;
@@ -184,6 +192,9 @@ export type Database = {
           starts_on: string;
           ends_on: string | null;
           status: PublicationStatus;
+          description_fr: string | null;
+          description_ar: string | null;
+          image_url: string | null;
         }>;
         Relationships: [];
       };
@@ -208,6 +219,7 @@ export type Database = {
           validated_at: string | null;
           rejection_reason: string | null;
           donor_id: string | null;
+          visibility: DonationVisibility;
         };
         Insert: {
           id?: string;
@@ -226,6 +238,7 @@ export type Database = {
           message?: string | null;
           transaction_ref?: string | null;
           donor_id?: string | null;
+          visibility?: DonationVisibility;
           created_at?: string;
           /**
            * Renseignés uniquement lors d'une SAISIE AU GUICHET : le Trésorier a l'argent
@@ -633,6 +646,47 @@ export type Database = {
           status: DonationStatus;
           created_at: string;
           validated_at: string | null;
+        }[];
+      };
+
+      /**
+       * Collectes publiées d'un programme, progression comprise.
+       * ⚠️ Une seule requête pour toute la page : appeler `campaign_progress()`
+       * campagne par campagne ferait autant d'allers-retours que de collectes.
+       */
+      public_campaigns: {
+        Args: { p_program?: ProgramSlugDb | null };
+        Returns: {
+          id: string;
+          title_fr: string;
+          title_ar: string | null;
+          description_fr: string | null;
+          description_ar: string | null;
+          image_url: string | null;
+          program: ProgramSlugDb | null;
+          goal_fcfa: number;
+          collected_fcfa: number;
+          donors_count: number;
+          starts_on: string;
+          ends_on: string | null;
+          closed: boolean;
+        }[];
+      };
+
+      /**
+       * Liste publique des dons d'une collecte.
+       * ⚠️ SEUL chemin par lequel un visiteur anonyme voit quoi que ce soit de
+       * `donations`. Ne renvoie jamais téléphone, email ni identifiant, masque le nom
+       * selon `anonymous` et le montant selon `visibility`, et ignore les dons non
+       * validés.
+       */
+      campaign_donors: {
+        Args: { p_campaign: string; p_sort?: string; p_limit?: number };
+        Returns: {
+          display_name: string | null;
+          amount_fcfa: number | null;
+          message: string | null;
+          created_at: string;
         }[];
       };
 

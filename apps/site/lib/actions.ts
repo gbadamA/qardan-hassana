@@ -91,6 +91,10 @@ export async function submitDonation(_prev: FormState, formData: FormData): Prom
     donorEmail: String(formData.get("donorEmail") ?? ""),
     anonymous: formData.get("anonymous") === "on",
     message: String(formData.get("message") ?? ""),
+    campaignId: String(formData.get("campaignId") ?? "") || null,
+    // Case « masquer mon montant » : absente du formulaire = affichage public, qui est
+    // le comportement que le donateur voit annoncé au-dessus du bouton d'envoi.
+    visibility: formData.get("hideAmount") === "on" ? "prive" : "public",
   });
 
   if (!parsed.success) {

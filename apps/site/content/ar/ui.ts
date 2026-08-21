@@ -159,6 +159,28 @@ export const uiAr: SiteUi = {
       "تاريخ منظمة «قرض حسن» وإطارها القانوني وهيكلها التنظيمي وقيمها، منظمة إيفوارية غير حزبية ولا تهدف إلى الربح خاضعة للقانون رقم 60-315 المؤرخ في 21 سبتمبر 1960.",
   },
 
+  campaigns: {
+    eyebrow: "حملات جارية",
+    title: "متابعة التبرعات",
+    of: "من أصل",
+    donors: "مشاركاً",
+    remaining: "يتبقى",
+    goalReached: "تم بلوغ الهدف — شكراً للجميع.",
+    give: "أتبرّع",
+    shareWhatsapp: "المشاركة عبر واتساب",
+    copyLink: "نسخ الرابط",
+    linkCopied: "تم نسخ الرابط",
+    donorsTitle: "آخر التبرعات",
+    sortRecent: "الأحدث",
+    sortAmount: "المبالغ",
+    sortComment: "مع رسالة",
+    anonymous: "مجهول",
+    hiddenAmount: "مبلغ خاص",
+    seeMore: "عرض المزيد",
+    justNow: "الآن",
+    validatedBy:
+      "كل مبلغ معروض يقابل دفعة عاينها وصادق عليها أمين المال العام. التبرعات في انتظار المصادقة لا تُحتسب.",
+  },
   programs: {
     heroEyebrow: "برامجنا",
     heroTitle: "أربعة برامج، أربعة ميادين عمل",
@@ -324,6 +346,9 @@ export const uiAr: SiteUi = {
       emailHint: "لاستلام إيصالك بالبريد الإلكتروني",
       messageOptional: "رسالة (اختياري)",
       messagePlaceholder: "نية خاصة، أو إهداء…",
+      hideAmount: "عدم إظهار مبلغي",
+      hideAmountHint:
+        "سيبقى اسمك في قائمة تبرعات الحملة، لكن المبلغ ورسالتك سيُخفيان.",
       anonymous: "أرغب في عدم ذكر اسمي",
       anonymousHint: "لن يظهر اسمك في أي منشور أو قائمة محسنين.",
       recapTitle: "تبرعك",

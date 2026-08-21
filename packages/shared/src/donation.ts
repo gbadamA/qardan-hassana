@@ -60,6 +60,19 @@ export const donationIntentSchema = z.object({
   /** Le donateur peut demander que son nom n'apparaisse dans aucune publication. */
   anonymous: z.boolean(),
   message: z.string().trim().max(500, "errors.tooLong").optional().or(z.literal("")),
+  /**
+   * Collecte visée, quand le don part d'une page de campagne.
+   * `null` = don au programme, non rattaché à une collecte.
+   *
+   * ⚠️ La validité de la campagne (publiée, ouverte) est revérifiée EN BASE : le
+   * formulaire protège l'ergonomie, pas l'intégrité de la barre de progression.
+   */
+  campaignId: z.string().uuid("errors.campaign.invalid").nullable().optional(),
+  /**
+   * « prive » masque le MONTANT et le message sur la page de campagne — le nom, lui,
+   * dépend de `anonymous`. Deux réglages distincts, deux cases à cocher.
+   */
+  visibility: z.enum(["public", "prive"]).optional(),
 });
 
 export type DonationIntent = z.infer<typeof donationIntentSchema>;

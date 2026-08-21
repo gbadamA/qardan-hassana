@@ -17,6 +17,13 @@ type AuthState = {
   can: {
     writeFinance: boolean;
     writeOps: boolean;
+    /**
+     * Créer et éditer une collecte. Volontairement PLUS ÉTROIT que `writeOps` : décider
+     * des campagnes à lancer relève de l'Administratif et de la Direction, pas d'un
+     * responsable de programme. Miroir exact de `can_write_campaigns()` en base — c'est
+     * elle qui fait foi, ceci ne fait qu'éviter d'afficher un bouton qui échouerait.
+     */
+    writeCampaigns: boolean;
     admin: boolean;
     /** Le Commissaire aux Comptes : lecture seule, sans exception. */
     readOnly: boolean;
@@ -30,7 +37,7 @@ const AuthContext = createContext<AuthState>({
   profile: null,
   loading: true,
   signOut: async () => {},
-  can: { writeFinance: false, writeOps: false, admin: false, readOnly: true },
+  can: { writeFinance: false, writeOps: false, writeCampaigns: false, admin: false, readOnly: true },
   scopedProgram: null,
 });
 
@@ -109,6 +116,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           role === "direction" ||
           role === "administratif" ||
           role === "resp_programme",
+        writeCampaigns:
+          role === "super_admin" || role === "direction" || role === "administratif",
         admin: role === "super_admin" || role === "administratif",
         readOnly: role === "commissaire",
       },

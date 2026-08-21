@@ -15,6 +15,7 @@ import { getContent, getUi, sortedArticleMetas, upcomingEventMetas } from "@/con
 import { ArticleCard, EventCard } from "@/components/cards";
 import { Icon } from "@/components/Icon";
 import { ArrowLink, PageHero, SectionHeading } from "@/components/ui";
+import { CampaignTracker } from "@/components/CampaignTracker";
 import { pageMetadata } from "@/lib/seo";
 
 /** Les 4 programmes × 2 langues sont générés statiquement au build. */
@@ -205,6 +206,15 @@ export default async function ProgramPage({
           </div>
         </div>
       </section>
+
+      {/*
+        Suivi des dons — collectes ciblées du programme.
+        Placé APRÈS « Ce dont nous avons besoin » : le visiteur lit d'abord à quoi sert
+        l'argent, ensuite seulement combien il en manque. Le composant ne rend rien
+        lorsqu'aucune collecte n'est ouverte, donc la page reste inchangée pour les
+        programmes sans campagne.
+      */}
+      <CampaignTracker program={slug} locale={locale} ui={ui} />
 
       {/* Actualités liées */}
       {articles.length > 0 && (

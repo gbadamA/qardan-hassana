@@ -161,6 +161,28 @@ export const uiFr = {
       "Histoire, cadre légal, organigramme et valeurs de l'ONG Qardan Hassana, organisation ivoirienne apolitique et à but non lucratif régie par la loi n° 60-315 du 21 septembre 1960.",
   },
 
+  campaigns: {
+    eyebrow: "Collectes en cours",
+    title: "Suivi des dons",
+    of: "sur",
+    donors: "participants",
+    remaining: "Plus que",
+    goalReached: "Objectif atteint — merci à tous.",
+    give: "Je fais un don",
+    shareWhatsapp: "Partager sur WhatsApp",
+    copyLink: "Copier le lien",
+    linkCopied: "Lien copié",
+    donorsTitle: "Derniers dons",
+    sortRecent: "Récents",
+    sortAmount: "Montants",
+    sortComment: "Avec message",
+    anonymous: "Anonyme",
+    hiddenAmount: "Montant privé",
+    seeMore: "Voir plus de dons",
+    justNow: "à l'instant",
+    validatedBy:
+      "Chaque montant affiché correspond à un versement constaté et validé par le Trésorier Général. Les dons en attente de validation n'entrent pas dans le compteur.",
+  },
   programs: {
     heroEyebrow: "Nos programmes",
     heroTitle: "Quatre programmes, quatre terrains d'action",
@@ -328,6 +350,9 @@ export const uiFr = {
       emailHint: "Pour recevoir votre reçu par email",
       messageOptional: "Message (facultatif)",
       messagePlaceholder: "Une intention particulière, une dédicace…",
+      hideAmount: "Ne pas afficher mon montant",
+      hideAmountHint:
+        "Votre nom restera dans la liste des dons de la collecte, mais le montant et votre message seront masqués.",
       anonymous: "Rester anonyme",
       anonymousHint: "Votre nom n'apparaîtra dans aucune publication ni liste de bienfaiteurs.",
       recapTitle: "Votre don",

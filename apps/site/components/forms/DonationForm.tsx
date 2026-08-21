@@ -40,6 +40,15 @@ export function DonationForm({
 }) {
   const params = useSearchParams();
   const preselected = params.get("programme");
+
+  /**
+   * Collecte visée, arrivée par `?campagne=…` depuis une page de programme.
+   *
+   * ⚠️ On ne fait que la transmettre : sa validité — publiée, ouverte, existante — est
+   * vérifiée EN BASE par `submit_public_donation`. Un identifiant inventé dans l'URL
+   * fait échouer l'envoi, il ne rattache rien.
+   */
+  const campaignId = params.get("campagne");
   const t = ui.donate.form;
 
   const [state, formAction, pending] = useActionState(submitDonation, INITIAL_FORM_STATE);
@@ -162,6 +171,7 @@ export function DonationForm({
 
           {/* Le montant réellement soumis — synchronisé avec les boutons ci-dessus. */}
           <input type="hidden" name="amount" value={effectiveAmount || ""} />
+          {campaignId && <input type="hidden" name="campaignId" value={campaignId} />}
 
           {err("amount") && (
             <p role="alert" className="mt-3 text-caption font-medium text-danger">
@@ -317,13 +327,27 @@ export function DonationForm({
               />
             </Field>
 
-            <div className="sm:col-span-2">
+            <div className="sm:col-span-2 space-y-4">
               <Toggle
                 id="anonymous"
                 name="anonymous"
                 label={t.anonymous}
                 hint={t.anonymousHint}
               />
+
+              {/*
+                Ce réglage n'a de sens que sur une collecte : c'est la seule page où un
+                montant s'affiche publiquement. Hors campagne, la question ne se pose pas
+                et la case n'apparaît pas.
+              */}
+              {campaignId && (
+                <Toggle
+                  id="hideAmount"
+                  name="hideAmount"
+                  label={t.hideAmount}
+                  hint={t.hideAmountHint}
+                />
+              )}
             </div>
           </div>
         </fieldset>

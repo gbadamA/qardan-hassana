@@ -56,6 +56,8 @@ const supabaseSubmissionStore: SubmissionStore = {
         p_donor_email: intent.donorEmail || null,
         p_anonymous: intent.anonymous,
         p_message: intent.message || null,
+        p_campaign: intent.campaignId ?? null,
+        p_visibility: intent.visibility ?? "public",
       });
 
       if (error) throw new Error(error.message);
