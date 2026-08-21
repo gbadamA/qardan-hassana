@@ -4,7 +4,7 @@ import { PROGRAMS, formatDate, isProgramSlug, type ProgramSlug } from "@qardan/s
 import { palette } from "@qardan/design-tokens";
 import { useLocale } from "@/lib/locale";
 import { useCachedQuery } from "@/lib/cache";
-import { Card, GradientHeader, Loading, Notice, PrimaryButton, Screen } from "@/components/ui";
+import { Card, GradientHeader, Loading, Notice, PrimaryButton, Screen, useContentPadding } from "@/components/ui";
 
 type NewsRow = {
   id: string;
@@ -28,6 +28,9 @@ type NewsRow = {
  */
 export default function ProgramDetailScreen() {
   const { locale, dict, ui } = useLocale();
+
+  // Marge basse : sans elle, le contenu passe sous la barre de geste du téléphone.
+  const padBas = useContentPadding();
   const router = useRouter();
   const params = useLocalSearchParams<{ slug?: string }>();
 
@@ -69,7 +72,7 @@ export default function ProgramDetailScreen() {
 
   return (
     <Screen>
-      <ScrollView contentContainerStyle={{ paddingBottom: 40 }}>
+      <ScrollView contentContainerStyle={padBas}>
         <GradientHeader title={labels.fullName} subtitle={labels.tagline} color={program.color} />
 
         {news.stale ? <Notice text={ui.settings.offline} tone="warning" /> : null}

@@ -1,5 +1,6 @@
 import { Tabs } from "expo-router";
 import { Text, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { brand, palette } from "@qardan/design-tokens";
 import { useLocale } from "@/lib/locale";
 
@@ -21,6 +22,15 @@ function TabIcon({ glyph, focused }: { glyph: string; focused: boolean }) {
 export default function TabsLayout() {
   const { ui } = useLocale();
 
+  /**
+   * ⚠️ Depuis le SDK 55, l'edge-to-edge est OBLIGATOIRE sur Android : l'application
+   * dessine sous la barre de navigation du système. Une hauteur figée faisait donc
+   * chevaucher nos onglets avec les boutons — ou la barre de geste — du téléphone.
+   * On réserve leur place au lieu de la deviner : `insets.bottom` vaut 0 sur un appareil
+   * à boutons physiques, et la hauteur réelle de la barre de geste ailleurs.
+   */
+  const insets = useSafeAreaInsets();
+
   return (
     <Tabs
       screenOptions={{
@@ -30,8 +40,8 @@ export default function TabsLayout() {
         tabBarStyle: {
           backgroundColor: palette.light.surface,
           borderTopColor: palette.light.border,
-          height: 62,
-          paddingBottom: 8,
+          height: 62 + insets.bottom,
+          paddingBottom: 8 + insets.bottom,
           paddingTop: 6,
         },
         tabBarLabelStyle: { fontSize: 11, fontWeight: "600" },

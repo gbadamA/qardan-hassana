@@ -10,10 +10,13 @@ import {
   notificationsActives,
   synchroniserLangue,
 } from "@/lib/notifications";
-import { Card, GradientHeader, Notice, PrimaryButton, Screen } from "@/components/ui";
+import { Card, GradientHeader, Notice, PrimaryButton, Screen, useContentPadding } from "@/components/ui";
 
 export default function SettingsScreen() {
   const { locale, dict, ui, setLocale, needsRestart } = useLocale();
+
+  // Marge basse : sans elle, le contenu passe sous la barre de geste du téléphone.
+  const padBas32 = useContentPadding(32);
   const router = useRouter();
 
   const [pushActif, setPushActif] = useState(false);
@@ -61,7 +64,7 @@ export default function SettingsScreen() {
 
   return (
     <Screen>
-      <ScrollView contentContainerStyle={{ paddingBottom: 32 }}>
+      <ScrollView contentContainerStyle={padBas32}>
         <GradientHeader title={ui.settings.title} />
 
         <View style={{ padding: 20, gap: 16 }}>

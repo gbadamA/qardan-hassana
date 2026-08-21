@@ -21,6 +21,7 @@ import {
   PrimaryButton,
   Screen,
   formStyles as styles,
+  useContentPadding,
 } from "@/components/ui";
 
 /**
@@ -36,6 +37,9 @@ import {
  */
 export default function MyDonationsScreen() {
   const { locale, dict, ui } = useLocale();
+
+  // Marge basse : sans elle, le contenu passe sous la barre de geste du téléphone.
+  const padBas = useContentPadding();
   const router = useRouter();
 
   const [dons, setDons] = useState<DonSuivi[]>([]);
@@ -119,7 +123,7 @@ export default function MyDonationsScreen() {
   return (
     <Screen>
       <ScrollView
-        contentContainerStyle={{ paddingBottom: 40 }}
+        contentContainerStyle={padBas}
         keyboardShouldPersistTaps="handled"
         refreshControl={
           <RefreshControl

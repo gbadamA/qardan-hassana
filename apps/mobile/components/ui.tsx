@@ -1,5 +1,6 @@
 import { ActivityIndicator, Pressable, Text, View } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { brand, gradient, palette } from "@qardan/design-tokens";
 
 /**
@@ -34,6 +35,10 @@ export function GradientHeader({
 }) {
   // `gradient.emerald` est un tuple `as const` de trois couleurs : on garde ses deux
   // extrémités, ou on remplace la dernière par la teinte du programme.
+  // ⚠️ `paddingTop: 56` était figé : trop peu sous une encoche haute, trop sous un
+  // écran plat. On part de la marge RÉELLE annoncée par le système.
+  const insets = useSafeAreaInsets();
+
   const colors: [string, string, ...string[]] = color
     ? [gradient.emerald[0], color]
     : [...gradient.emerald];
@@ -43,7 +48,7 @@ export function GradientHeader({
       colors={colors}
       start={{ x: 0, y: 0 }}
       end={{ x: 1, y: 1 }}
-      style={{ paddingHorizontal: 20, paddingTop: 56, paddingBottom: 24 }}
+      style={{ paddingHorizontal: 20, paddingTop: insets.top + 16, paddingBottom: 24 }}
     >
       <Text style={{ color: "#fff", fontSize: 26, fontWeight: "800" }}>{title}</Text>
       {subtitle ? (
@@ -192,6 +197,19 @@ export function Choice({
       ) : null}
     </Pressable>
   );
+}
+
+/**
+ * Marge basse d'un écran défilant HORS onglets.
+ *
+ * Les écrans d'onglet sont déjà remontés au-dessus de la barre par le navigateur ; les
+ * autres (bénévole, mes dons, réglages, détail de programme) sont empilés sans elle et
+ * leur contenu passerait sous la barre de geste. D'où cette marge, ajoutée à la marge
+ * de confort habituelle.
+ */
+export function useContentPadding(base = 40): { paddingBottom: number } {
+  const insets = useSafeAreaInsets();
+  return { paddingBottom: base + insets.bottom };
 }
 
 export const formStyles = {

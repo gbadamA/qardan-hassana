@@ -20,6 +20,7 @@ import {
   PrimaryButton,
   Screen,
   formStyles as styles,
+  useContentPadding,
 } from "@/components/ui";
 
 /**
@@ -35,6 +36,10 @@ import {
  */
 export default function VolunteerScreen() {
   const { dict, ui } = useLocale();
+
+  // Marge basse : sans elle, le contenu passe sous la barre de geste du téléphone.
+  const padBas = useContentPadding();
+  const padBas32 = useContentPadding(32);
   const router = useRouter();
 
   const [fullName, setFullName] = useState("");
@@ -120,7 +125,7 @@ export default function VolunteerScreen() {
   if (reference) {
     return (
       <Screen>
-        <ScrollView contentContainerStyle={{ paddingBottom: 32 }}>
+        <ScrollView contentContainerStyle={padBas32}>
           <GradientHeader title={ui.volunteer.successTitle} subtitle={ui.volunteer.successLead} />
           <View style={{ padding: 20, gap: 16 }}>
             <Card>
@@ -151,7 +156,7 @@ export default function VolunteerScreen() {
 
   return (
     <Screen>
-      <ScrollView contentContainerStyle={{ paddingBottom: 40 }} keyboardShouldPersistTaps="handled">
+      <ScrollView contentContainerStyle={padBas} keyboardShouldPersistTaps="handled">
         <GradientHeader title={ui.volunteer.title} subtitle={ui.volunteer.lead} />
 
         <View style={{ padding: 20, gap: 20 }}>
