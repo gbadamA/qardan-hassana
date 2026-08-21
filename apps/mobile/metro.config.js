@@ -1,5 +1,4 @@
 const { getDefaultConfig } = require("expo/metro-config");
-const { withNativeWind } = require("nativewind/metro");
 
 /**
  * ⚠️ **Configuration Metro volontairement MINIMALE.**
@@ -12,6 +11,4 @@ const { withNativeWind } = require("nativewind/metro");
  * Ne pas non plus toucher à `unstable_enablePackageExports` : le passer à `false`
  * répare react-native mais casse gesture-handler.
  */
-const config = getDefaultConfig(__dirname);
-
-module.exports = withNativeWind(config, { input: "./global.css" });
+module.exports = getDefaultConfig(__dirname);
