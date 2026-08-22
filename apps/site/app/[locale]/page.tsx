@@ -21,6 +21,7 @@ import {
 import { getContent, getUi, sortedArticleMetas, upcomingEventMetas } from "@/content";
 import { ArticleCard, EventCard, ProgramCard } from "@/components/cards";
 import { CountUp } from "@/components/CountUp";
+import { HomeCampaigns } from "@/components/HomeCampaigns";
 import { Icon } from "@/components/Icon";
 import { ArrowLink, SectionHeading } from "@/components/ui";
 import { LogoMark } from "@/components/Logo";
@@ -152,6 +153,9 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
           ))}
         </div>
       </section>
+
+      {/* ═══════════════════ COLLECTES EN COURS ═══════════════════ */}
+      <HomeCampaigns locale={locale} ui={ui} />
 
       {/* ═══════════════════════ PROGRAMMES ═══════════════════════ */}
       <section className="container-content py-20 sm:py-24">

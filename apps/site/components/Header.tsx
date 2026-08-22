@@ -27,6 +27,7 @@ export function Header({
   const nav = [
     { href: "/a-propos", label: ui.nav.about },
     { href: "/programmes", label: ui.nav.programs },
+    { href: "/collectes", label: ui.nav.campaigns },
     { href: "/actualites", label: ui.nav.news },
     { href: "/evenements", label: ui.nav.events },
     { href: "/transparence", label: ui.nav.transparency },

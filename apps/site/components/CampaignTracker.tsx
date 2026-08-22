@@ -33,6 +33,7 @@ type Campagne = {
   description_fr: string | null;
   description_ar: string | null;
   image_url: string | null;
+  program: ProgramSlug | null;
   goal_fcfa: number;
   collected_fcfa: number;
   donors_count: number;
@@ -50,13 +51,27 @@ type Donateur = {
 type Tri = "recent" | "montant" | "message";
 
 export function CampaignTracker({
-  program,
+  program = null,
   locale,
   ui,
+  showHeading = true,
+  emptyMessage,
 }: {
-  program: ProgramSlug;
+  /** `null` = toutes les collectes, tous programmes confondus. */
+  program?: ProgramSlug | null;
   locale: Locale;
   ui: SiteUi;
+  /**
+   * La page dédiée porte déjà son propre titre en bandeau ; le répéter au-dessus des
+   * cartes ferait deux titres pour une seule chose.
+   */
+  showHeading?: boolean;
+  /**
+   * Affiché quand il n'y a aucune collecte. Omis, le bloc disparaît — c'est ce qu'il
+   * faut sous un programme, pas sur une page qui s'appelle « Collectes » et serait
+   * alors entièrement vide.
+   */
+  emptyMessage?: string;
 }) {
   const [campagnes, setCampagnes] = useState<Campagne[] | null>(null);
 
@@ -81,20 +96,33 @@ export function CampaignTracker({
 
   // Tant qu'on ne sait pas, on n'affiche rien : un squelette de carte pour découvrir
   // qu'il n'y a aucune collecte serait une promesse déçue.
-  if (campagnes === null || campagnes.length === 0) return null;
+  if (campagnes === null) return null;
+
+  if (campagnes.length === 0) {
+    if (!emptyMessage) return null;
+    return (
+      <section className="container-content pb-20">
+        <p className="rounded-lg border border-light-border bg-light-surface p-8 text-center text-[0.95rem] text-light-muted dark:border-dark-border dark:bg-dark-surface dark:text-dark-muted">
+          {emptyMessage}
+        </p>
+      </section>
+    );
+  }
 
   return (
     <section className="container-content pb-20">
-      <div className="mb-10" data-reveal>
-        <p className="eyebrow mb-3">{ui.campaigns.eyebrow}</p>
-        <h2 className="font-display text-display text-light-text dark:text-dark-text">
-          {ui.campaigns.title}
-        </h2>
-      </div>
+      {showHeading && (
+        <div className="mb-10" data-reveal>
+          <p className="eyebrow mb-3">{ui.campaigns.eyebrow}</p>
+          <h2 className="font-display text-display text-light-text dark:text-dark-text">
+            {ui.campaigns.title}
+          </h2>
+        </div>
+      )}
 
       <div className="grid gap-8 lg:grid-cols-2">
         {campagnes.map((c) => (
-          <CarteCampagne key={c.id} campagne={c} locale={locale} ui={ui} program={program} />
+          <CarteCampagne key={c.id} campagne={c} locale={locale} ui={ui} />
         ))}
       </div>
     </section>
@@ -105,12 +133,10 @@ function CarteCampagne({
   campagne,
   locale,
   ui,
-  program,
 }: {
   campagne: Campagne;
   locale: Locale;
   ui: SiteUi;
-  program: ProgramSlug;
 }) {
   const titre = locale === "ar" && campagne.title_ar ? campagne.title_ar : campagne.title_fr;
   const description =
@@ -194,10 +220,20 @@ function CarteCampagne({
         </div>
 
         {/* Actions */}
-        <div className="mt-6 flex flex-wrap gap-3">
+        <div className="mt-6 flex flex-wrap items-center gap-3">
+          {campagne.closed && (
+            <span className="rounded-full bg-light-surface-alt px-4 py-2 text-caption font-semibold text-light-muted dark:bg-dark-surface-alt dark:text-dark-muted">
+              {ui.campaigns.closed}
+            </span>
+          )}
           {!campagne.closed && (
             <Link
-              href={localePath(locale, `/don?programme=${program}&campagne=${campagne.id}`)}
+              href={localePath(
+                locale,
+                campagne.program
+                  ? `/don?programme=${campagne.program}&campagne=${campagne.id}`
+                  : `/don?campagne=${campagne.id}`,
+              )}
               className="btn-accent"
             >
               <HeartHandshake className="h-4 w-4" />

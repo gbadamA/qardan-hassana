@@ -13,6 +13,7 @@ export const uiFr = {
     home: "Accueil",
     about: "À propos",
     programs: "Nos programmes",
+    campaigns: "Collectes",
     news: "Actualités",
     events: "Événements",
     transparency: "Transparence",
@@ -163,6 +164,17 @@ export const uiFr = {
 
   campaigns: {
     eyebrow: "Collectes en cours",
+    /** Page dédiée. */
+    heroTitle: "Ce que nous collectons en ce moment",
+    heroLead:
+      "Chaque collecte a un objectif chiffré, une échéance et un programme. Le compteur ne bouge que lorsque le Trésorier Général a constaté le versement.",
+    empty: "Aucune collecte n'est ouverte en ce moment. Les dons généraux, eux, restent les bienvenus.",
+    /** Accueil. */
+    homeTitle: "Collectes en cours",
+    homeLead: "Où en sont les objectifs que nous nous sommes fixés, en temps réel.",
+    homeCta: "Voir toutes les collectes",
+    see: "Voir la collecte",
+    closed: "Collecte clôturée",
     title: "Suivi des dons",
     of: "sur",
     donors: "participants",
